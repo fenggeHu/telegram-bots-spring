@@ -60,9 +60,9 @@ public class ClassUtil {
             Class sc = clazz.getSuperclass();
             if (null != sc) {
                 List<Method> superMethods = getDeclaredMethodsWithAnnotation(sc, annotationClass, true);
-                // override method
+                // override method - 判断父类的方法是否被子类中的某个方法覆盖了
                 for (Method sm : superMethods) {
-                    if (isOverride(sm, methods)) continue;
+                    if (isInMethods(sm, methods)) continue;
                     ret.add(sm);
                 }
             }
@@ -70,12 +70,14 @@ public class ClassUtil {
         return ret;
     }
 
-    // 判断父类的方法是否被子类中的某个方法覆盖了
-    public static boolean isOverride(Method parentMethod, Method[] methods) {
+    /**
+     * 判断Method是否在另一组Method中有相同的定义
+     * 注意：这个方法没有考虑Method所属的类
+     */
+    public static boolean isInMethods(Method m, Method[] methods) {
         for (Method child : methods) {
-            if ((child.getName().equals(parentMethod.getName())
-                    && Arrays.equals(child.getParameterTypes(), parentMethod.getParameterTypes())
-                    && child.getReturnType().equals(parentMethod.getReturnType()))) {
+            if ((child.getName().equals(m.getName()) && child.getReturnType().equals(m.getReturnType()))
+                    && Arrays.equals(child.getParameterTypes(), m.getParameterTypes())) {
                 return true;
             }
         }
