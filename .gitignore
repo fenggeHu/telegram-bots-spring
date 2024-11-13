@@ -1,0 +1,61 @@
+# Compiled class file
+*.class
+.classpath
+.settings/
+.project
+/.project
+target/
+target-eclipse/classes
+
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+/build/
+/dist/
+# Log file
+*.log
+/logs/
+
+### IntelliJ IDEA ###
+.idea
+.iml
+*/*.iml
+*.iml
+*.ipr
+*.iws
+*.swp
+*.ids
+.DS_Store
+.history
+
+# Sourcetrail files
+*.srctrlbm
+*.srctrldb
+*.srctrlprj
+/sourcetrail_dependencies
+
+### Eclipse ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+### Mac OS ###
+.DS_Store
