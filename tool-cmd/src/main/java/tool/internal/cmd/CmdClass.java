@@ -66,7 +66,7 @@ public class CmdClass<T> {
         CmdClass<?> cmdClass = CmdClass.<T>builder().id(id).clazz(baseClass).build();
 
         //1, 先加载boot class
-        var bootCmdMethods = CmdMethod.getCmdMethod(baseClass);
+        var bootCmdMethods = CmdMethod.getCmdMethod(baseClass, true);
         if (bootCmdMethods.isEmpty()) {
             cmdClass.cmdClass = baseClass;
         } else {  // 需要注入Cmd拦截器
@@ -83,7 +83,7 @@ public class CmdClass<T> {
         List<ExtClass> validExtClass = new LinkedList<>();    // 记录有效的ext class
         Map<String, CmdMethod<?>> validExtCmdMethod = new HashMap<>();
         for (ExtClass ext : extClass) {
-            var cmdMethod = CmdMethod.getCmdMethod(ext.getClazz());
+            var cmdMethod = CmdMethod.getCmdMethod(ext.getClazz(), true);
             if (!cmdMethod.isEmpty()) {
                 // cmd method
                 List<CmdMethod> validCmdMethods = new LinkedList<>();  // 记录有效的cmd method

@@ -77,9 +77,9 @@ public class CmdMethod<T> {
 
 
     // 提取cmd method
-    public static <T> Map<String, CmdMethod> getCmdMethod(Class<T> clazz) {
+    public static <T> Map<String, CmdMethod> getCmdMethod(Class<T> clazz, boolean withSuper) {
         Map<String, CmdMethod> ret = new HashMap<>();
-        var methods = ClassUtil.getDeclaredMethodsWithAnnotation(clazz, Cmd.class, false);
+        var methods = ClassUtil.getDeclaredMethodsWithAnnotation(clazz, Cmd.class, withSuper);
         if (methods.isEmpty()) {
             return ret;
         }

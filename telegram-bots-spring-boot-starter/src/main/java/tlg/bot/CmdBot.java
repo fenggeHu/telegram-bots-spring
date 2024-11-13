@@ -5,6 +5,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.message.Message;
 import tlg.bot.entity.Command;
 import tlg.bot.entity.Config;
+import tool.internal.cmd.Cmd;
 import tool.internal.cmd.CmdDTO;
 
 /**
@@ -47,10 +48,11 @@ public class CmdBot extends BotWriter {
         log.info("user message: {}", message.getText());
     }
 
-    //
+    // 处理命令
+    @Cmd
     public CmdDTO doCommand(final Message message) {
         log.debug("command: {}", message.getText());
         var cmd = Command.of(message);
-        return CmdDTO.of(cmd.getExe(), message);
+        return CmdDTO.of(cmd.getExe(), cmd);
     }
 }

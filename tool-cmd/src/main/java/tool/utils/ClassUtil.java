@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -58,10 +59,27 @@ public class ClassUtil {
         if (withSuper) {
             Class sc = clazz.getSuperclass();
             if (null != sc) {
-                ret.addAll(getDeclaredMethodsWithAnnotation(sc, annotationClass, true));
+                List<Method> superMethods = getDeclaredMethodsWithAnnotation(sc, annotationClass, true);
+                // override method
+                for (Method sm : superMethods) {
+                    if (isOverride(sm, methods)) continue;
+                    ret.add(sm);
+                }
             }
         }
         return ret;
+    }
+
+    // 判断父类的方法是否被子类中的某个方法覆盖了
+    public static boolean isOverride(Method parentMethod, Method[] methods) {
+        for (Method child : methods) {
+            if ((child.getName().equals(parentMethod.getName())
+                    && Arrays.equals(child.getParameterTypes(), parentMethod.getParameterTypes())
+                    && child.getReturnType().equals(parentMethod.getReturnType()))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     // 查询带注解的属性
