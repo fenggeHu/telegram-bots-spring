@@ -24,9 +24,12 @@ public class ExpressionParser {
             template = TemplateCompiler.compileTemplate(expression);
             cache.put(key, template);
         }
-
-        Object result = TemplateRuntime.execute(template, vars);
-        return null == result ? null : String.valueOf(result);
+        try {
+            Object result = TemplateRuntime.execute(template, vars);
+            return null == result ? null : String.valueOf(result);
+        } catch (Exception e) {
+            throw new RuntimeException(key + " - Please check expression: " + expression);
+        }
     }
 
 }
