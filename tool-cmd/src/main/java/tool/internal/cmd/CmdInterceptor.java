@@ -42,8 +42,14 @@ public class CmdInterceptor extends Interceptor {
         }
 
         // 执行跳转
-        CmdMethod<?> next = toCmdMethod(cmdDTO.to(), ths);
-        return Objects.requireNonNull(next).invoke(cmdDTO.getArgs());
+        String to = cmdDTO.to();
+        if (!to.isEmpty()) {
+            CmdMethod<?> next = toCmdMethod(cmdDTO.to(), ths);
+            return Objects.requireNonNull(next).invoke(cmdDTO.getArgs());
+        } else {
+            throw new RuntimeException(method.getDeclaringClass().getName() + "." + method.getName() +
+                    " - CmdMethod: " + cmdDTO);
+        }
     }
 
     // 缓存
@@ -57,7 +63,7 @@ public class CmdInterceptor extends Interceptor {
         }
         cm = CmdMethodKeeper.getMethod(obj.getClass().getName(), to);
         if (null == cm) {
-            throw new RuntimeException("Next Cmd not found: " + to);
+            throw new RuntimeException("CmdMethod not found: " + to);
         }
         this.cachedMethods.put(to, cm);
         return cm;

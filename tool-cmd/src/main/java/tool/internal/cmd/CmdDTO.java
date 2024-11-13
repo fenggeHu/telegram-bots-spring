@@ -30,6 +30,9 @@ public class CmdDTO {
 
     // 跳转uri
     public String to() {
+        if (null == this.getTo()) {
+            return "";
+        }
         return this.getTo().startsWith("/") ? this.getTo() : "/" + this.getTo();
     }
 
