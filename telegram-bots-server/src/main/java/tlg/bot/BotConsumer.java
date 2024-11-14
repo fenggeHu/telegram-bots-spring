@@ -19,7 +19,7 @@ import tlg.bot.entity.Config;
  **/
 @Slf4j
 public abstract class BotConsumer implements LongPollingSingleThreadUpdateConsumer {
-    private static final ObjectMapper mapper = new ObjectMapper()
+    protected static final ObjectMapper mapper = new ObjectMapper()
             // 设置在反序列化时忽略在JSON字符串中存在，而在Java中不存在的属性
             .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
             .setSerializationInclusion(JsonInclude.Include.NON_NULL);
