@@ -1,9 +1,10 @@
-package tool.internal.cmd;
+package tool.utils;
 
 import org.mvel2.templates.CompiledTemplate;
 import org.mvel2.templates.TemplateCompiler;
 import org.mvel2.templates.TemplateRuntime;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -13,6 +14,14 @@ import java.util.concurrent.ConcurrentHashMap;
  **/
 public class ExpressionParser {
     private static final Map<String, CompiledTemplate> cache = new ConcurrentHashMap<>();
+
+    // 把expression当作cache key
+    public static String execute(String expression, Map<String, Object> vars) {
+        if (null == expression || expression.isEmpty()) {
+            return expression;
+        }
+        return execute(expression, expression, vars);
+    }
 
     public static String execute(String key, String expression, Map<String, Object> vars) {
         if (null == expression || expression.isEmpty()) {
@@ -32,4 +41,15 @@ public class ExpressionParser {
         }
     }
 
+    // 其它的变形
+    public static String execute(String expression, Object... args) {
+        if (null == expression || expression.isEmpty()) {
+            return expression;
+        }
+        Map<String, Object> vars = new HashMap<>(args.length);
+        for (int i = 0; i < args.length; i++) {
+            vars.put("arg" + i, args[i]);
+        }
+        return execute(expression, vars);
+    }
 }
