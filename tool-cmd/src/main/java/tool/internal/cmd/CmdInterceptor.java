@@ -34,7 +34,7 @@ public class CmdInterceptor extends Interceptor {
             cmdDTO = (CmdDTO) callable.call();
         } else {
             var cmdInfo = Cmd.Builder.of(method);
-            String to = ExpressionParser.execute(cmdInfo.getId(), cmdInfo.getTo(), buildParameters(method, args));
+            String to = ExpressionParser.str(cmdInfo.getId(), cmdInfo.getTo(), buildParameters(method, args));
             // 判断跳转 - to为空或者与本id相同时执行本方法
             if (to.isEmpty() || to.equals(cmdInfo.getId())) {
                 return callable.call();
