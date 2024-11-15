@@ -45,11 +45,6 @@ public class CmdBeanFactory implements ApplicationContextAware {
         return cmdClass;
     }
 
-    public static CmdClass registerCmdBean(String rootId, Class<?> baseClass, final String[] extClassName, String[] extPackage) {
-        // 加载类信息
-        return registerCmdBean(rootId, baseClass, extClassName, extPackage, null);
-    }
-
     public static CmdClass registerCmdBean(String rootId, Class<?> baseClass, final String[] extClassName, String[] extPackage,
                                            Object... constructorArgs) {
         // 加载类信息

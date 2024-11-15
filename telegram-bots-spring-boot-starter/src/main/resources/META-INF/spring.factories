@@ -1,4 +1,5 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 tlg.bot.spring.CmdBeanFactory,\
 tlg.bot.spring.BotProperties,\
+tlg.bot.spring.BotBeanConfig,\
 tlg.bot.spring.BotServerStarter

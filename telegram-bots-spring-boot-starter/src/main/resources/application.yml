@@ -4,6 +4,11 @@ spring:
 
 # 配置bots参数
 bot:
+  proxy:  # 设置网络代理
+    host: 127.0.0.1
+    port: 8080
+    type: SOCKS
+
   configs:
     - id: xxxx1_Bot
       name: fengge

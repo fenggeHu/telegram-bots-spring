@@ -5,7 +5,6 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.longpolling.BotSession;
@@ -13,10 +12,9 @@ import org.telegram.telegrambots.longpolling.TelegramBotsLongPollingApplication;
 import org.telegram.telegrambots.longpolling.util.DefaultGetUpdatesGenerator;
 import org.telegram.telegrambots.meta.TelegramUrl;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import tlg.bot.entity.Config;
 import tlg.bot.BotConsumer;
 import tlg.bot.BotWriter;
-import tlg.bot.ext.BotConfig;
+import tlg.bot.entity.Config;
 
 import java.util.List;
 
@@ -27,27 +25,21 @@ import java.util.List;
  **/
 @Slf4j
 @Component
-@DependsOn("cmdBeanFactory")
+@DependsOn("botBeanConfig")
 public class BotServerStarter implements CommandLineRunner {
     @Autowired
     private BotProperties botProperties;
+    @Autowired
+    TelegramBotsLongPollingApplication botsApplication;
+
     @Setter
     private int tryTimes = 3;
-    final TelegramBotsLongPollingApplication botsApplication = new TelegramBotsLongPollingApplication();
 
     // Instantiate Telegram Bots API
     @Override
     public void run(String... args) {
         // 登录Telegram Bots
         this.register(botProperties.getConfigs());
-    }
-
-    // 为了使用Spring的相关能力，先把Bot注册成Spring Bean，再注册成TelegramBots
-    @Bean
-    public void registerBean() {
-        var configs = botProperties.getConfigs();
-        if (null == configs) return;
-        configs.parallelStream().forEach(e -> registerBean(e));
     }
 
     public void register(List<? extends Config> configs) {
@@ -86,22 +78,6 @@ public class BotServerStarter implements CommandLineRunner {
         } catch (InterruptedException e) {
             log.error("Try Register Bot: Thread Sleep Err", e);
         }
-    }
-
-    // TODO 待优化
-    @SneakyThrows
-    public void registerBean(final BotConfig config) {
-        //boot class
-        Class<?> bootClass = Class.forName(config.getBotClassName());
-        // 不使用cmd的方式
-//        try {
-//            registerBean(config.getId(), bootClass, config);
-//        } catch (Exception e) {
-//            registerBean(config.getId(), bootClass);
-//        }
-
-        // 使用cmd注解实现逻辑
-        CmdBeanFactory.registerCmdBean(config.getId(), bootClass, config.getExtClass(), config.getExtPackage(), config);
     }
 
     @SneakyThrows
