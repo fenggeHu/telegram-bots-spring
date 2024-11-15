@@ -19,6 +19,12 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <junit.version>5.11.0</junit.version>
+        <lombok.version>1.18.34</lombok.version>
+        <spring.boot.version>2.7.18</spring.boot.version>
+        <tool-cmd.version>0.1</tool-cmd.version>
+        <bots-server.version>0.1</bots-server.version>
+        <telegram-bots-spring-boot-starter.version>0.1</telegram-bots-spring-boot-starter.version>
     </properties>
 
 </project>
