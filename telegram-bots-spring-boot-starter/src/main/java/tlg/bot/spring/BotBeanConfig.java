@@ -25,6 +25,7 @@ import java.util.Map;
 @DependsOn("cmdBeanFactory")
 public class BotBeanConfig {
 
+    // for proxy
     @Bean
     public TelegramBotsLongPollingApplication botsApplication(BotProperties botProperties) {
         // 没有配置代理或者代理参数缺失
