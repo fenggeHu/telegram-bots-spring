@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @description 解析表达式
  **/
 public class ExpressionParser {
-    private static final Map<String, CompiledTemplate> cache = new ConcurrentHashMap<>();
+    private static final Map<String, CompiledTemplate> cached = new ConcurrentHashMap<>();
 
     // 把expression当作cache key
     public static String str(String expression, Map<String, Object> vars) {
@@ -38,11 +38,8 @@ public class ExpressionParser {
             return expression;
         }
 
-        CompiledTemplate template = cache.get(key);
-        if (template == null) {
-            template = TemplateCompiler.compileTemplate(expression, parserContext);
-            cache.put(key, template);
-        }
+        CompiledTemplate template = cached.computeIfAbsent(key,
+                k -> TemplateCompiler.compileTemplate(expression, parserContext));
         try {
             return TemplateRuntime.execute(template, vars);
         } catch (Exception e) {
