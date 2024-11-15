@@ -7,10 +7,8 @@ import tool.internal.bb.Interceptor;
 import tool.utils.ExpressionParser;
 
 import java.lang.reflect.Method;
-import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 拦截注解 @Cmd
@@ -46,29 +44,11 @@ public class CmdInterceptor extends Interceptor {
         // 执行跳转
         String to = cmdDTO.to();
         if (!to.isEmpty()) {
-            CmdMethod<?> next = toCmdMethod(cmdDTO.to(), ths);
+            CmdMethod<?> next = CmdMethodKeeper.getMethod(ths, to);
             return Objects.requireNonNull(next).invoke(cmdDTO.getArgs());
         } else {
-            throw new RuntimeException(method.getDeclaringClass().getName() + "." + method.getName() +
-                    " - CmdMethod: " + cmdDTO);
+            throw new RuntimeException(method.getDeclaringClass().getName() + "." + method.getName() + " - CmdMethod: " + cmdDTO);
         }
-    }
-
-    // 缓存
-    private Map<String, CmdMethod> cachedMethods = new ConcurrentHashMap<>();
-
-    // 查找
-    private CmdMethod toCmdMethod(String to, Object obj) {
-        var cm = cachedMethods.get(to);
-        if (cm != null) {
-            return cm;
-        }
-        cm = CmdMethodKeeper.getMethod(obj.getClass().getName(), to);
-        if (null == cm) {
-            throw new RuntimeException("CmdMethod not found: " + to);
-        }
-        this.cachedMethods.put(to, cm);
-        return cm;
     }
 
 }

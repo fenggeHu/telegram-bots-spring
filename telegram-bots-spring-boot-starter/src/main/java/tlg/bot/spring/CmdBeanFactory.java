@@ -25,7 +25,7 @@ public class CmdBeanFactory implements ApplicationContextAware {
     // 使用构造参数初始化main class
     public static CmdClass registerCmdBean(final CmdClass cmdClass, Object... constructorArgs) {
         // 加载类信息
-        CmdMethodKeeper.put(cmdClass.getId(), cmdClass);  // 统一管理
+        CmdMethodKeeper.set(cmdClass.getId(), cmdClass);  // 统一管理
         // 注册boot bean
         var boot = registerBean(cmdClass.getId(), cmdClass.getCmdClass(), constructorArgs);
         cmdClass.setBase(boot);
@@ -63,7 +63,7 @@ public class CmdBeanFactory implements ApplicationContextAware {
             if (cm.getClazz() == clazz) {
                 cm.setCmdObject(obj);
                 // 记录类名
-                CmdMethodKeeper.putClassName(rootId, obj.getClass().getName());
+                CmdMethodKeeper.addInstance(rootId, obj);
             }
         }
     }
