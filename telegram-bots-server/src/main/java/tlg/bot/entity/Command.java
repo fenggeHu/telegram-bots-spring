@@ -18,11 +18,11 @@ import java.util.regex.Pattern;
 @Data
 @Builder
 public class Command {
-    private Long chatId;
+    public Long chatId;
     // 指令exe /command
-    private String exe;
+    public String exe;
     // 参数 xxx
-    private String parameter;
+    public String parameter;
 
     // 解析parameter。 key：--key， kv空格分隔
     // 格式： -x 124 -y 4354 -z -a hello
