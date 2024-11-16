@@ -3,6 +3,8 @@ package tlg.bot.entity;
 import lombok.Builder;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
+import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.chat.Chat;
 import org.telegram.telegrambots.meta.api.objects.message.Message;
 
 import java.util.HashMap;
@@ -23,6 +25,17 @@ public class Command {
     public String exe;
     // 参数 xxx
     public String parameter;
+
+    // 收到的完整信息
+    public Update update;
+
+    public Message message() {
+        return this.update.getMessage();
+    }
+
+    public Chat chat() {
+        return message().getChat();
+    }
 
     // 解析parameter。 key：--key， kv空格分隔
     // 格式： -x 124 -y 4354 -z -a hello
@@ -63,5 +76,11 @@ public class Command {
                     .parameter(text.substring(entity.getLength() + 1))
                     .build();
         }
+    }
+
+    public static Command of(final Update update) {
+        var cmd = of(update.getMessage());
+        cmd.setUpdate(update);
+        return cmd;
     }
 }

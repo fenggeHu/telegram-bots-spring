@@ -21,7 +21,7 @@ public class CmdBot extends BotWriter {
     public void handleMessage(final Update update) {
         Message message = update.getMessage();
         if (message.isCommand()) {
-            this.doCommand(message);
+            this.doCommand(update);
         } else if (message.isUserMessage()) {
             this.doUserMessage(message);
         } else if (message.isChannelMessage()) {
@@ -50,9 +50,13 @@ public class CmdBot extends BotWriter {
 
     // 处理命令
     @Cmd
-    public CmdDTO doCommand(final Message message) {
-        log.debug("command: {}", message.getText());
-        var cmd = Command.of(message);
+    public CmdDTO doCommand(final Update update) {
+        var cmd = Command.of(update);
         return CmdDTO.of(cmd.getExe(), cmd);
+    }
+
+    @Cmd
+    public void start(Command command) {
+        writeText(command.getChatId(), "Hello, "+command.chat().getFirstName());
     }
 }
