@@ -7,7 +7,6 @@ import tool.utils.ClassUtil;
 
 import java.lang.reflect.Method;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * 通过bytebuddy给类注入拦截器
@@ -39,7 +38,7 @@ public class InterceptConfig {
                 ics = new Class[]{intercept};
                 this.methods.put(m, ics);
             } else {
-                var set = Arrays.asList(ics).stream().collect(Collectors.toSet());
+                var set = new HashSet<>(Arrays.asList(ics));
                 set.add(intercept);
                 this.methods.put(m, set.toArray(new Class[0]));
             }
