@@ -37,7 +37,7 @@ public @interface Cmd {
             String root = null == clazz ? "" : clazz.value()
                     .replace("//", "/").replace("//", "/").trim();
             var ns = cmd.value().replace("//", "/").replace("//", "/").trim();
-            String path = ns.length() > 0 ? ns : method.getName();
+            String path = !ns.isEmpty() ? ns : method.getName();
             var id = ("/" + root + (path.startsWith("/") ? path : "/" + path)).replace("//", "/");
             return CmdInfo.builder().id(id).to(cmd.to().trim()).clazz(method.getDeclaringClass()).build();
         }

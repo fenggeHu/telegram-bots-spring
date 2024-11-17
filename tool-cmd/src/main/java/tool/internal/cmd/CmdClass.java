@@ -81,7 +81,6 @@ public class CmdClass<T> {
         }
         //2, 分别处理ext class
         List<ExtClass> validExtClass = new LinkedList<>();    // 记录有效的ext class
-        Map<String, CmdMethod<?>> validExtCmdMethod = new HashMap<>();
         for (ExtClass ext : extClass) {
             var cmdMethod = CmdMethod.getCmdMethod(ext.getClazz(), true);
             if (!cmdMethod.isEmpty()) {
@@ -94,14 +93,13 @@ public class CmdClass<T> {
                     if (null == mtd || mtd.getClazz() == baseClass) {   // 扩展类可以替换基类
                         cmdClass.putMethod(k, v);
                         validCmdMethods.add(v);
-                        validExtCmdMethod.put(k, v);
                     } else {
                         log.warn("{} cmd method exists {}. method value: {}",
                                 v.getMethod().getName(), mtd.getMethod().getName(), k);
                     }
                 }
                 if (!validCmdMethods.isEmpty()) {
-                    Method[] cms = validCmdMethods.stream().map(e -> e.getMethod()).collect(Collectors.toSet()).toArray(new Method[0]);
+                    Method[] cms = validCmdMethods.stream().map(CmdMethod::getMethod).collect(Collectors.toSet()).toArray(new Method[0]);
                     // 扩展类的拦截有效的Cmd
                     var ic = InterceptConfig.builder().id(ext.getId()).clazz(ext.getClazz())
                             .build();

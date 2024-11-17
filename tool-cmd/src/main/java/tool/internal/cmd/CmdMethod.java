@@ -22,7 +22,7 @@ public class CmdMethod<T> {
     // origin class
     protected Class<T> clazz;
     // cmd class
-    protected Class<T> cmdClass;
+    protected Class<?> cmdClass;
     // object
     protected T cmdObject;
     // 方法

@@ -64,7 +64,7 @@ public class ExtClass {
         if (null != extClass) {
             var ext = Ext.Builder.of(baseClass, extClass);
             extClasses.addAll(ext);
-            keys.addAll(ext.stream().map(e -> e.getId()).collect(Collectors.toSet()));
+            keys.addAll(ext.stream().map(ExtClass::getId).collect(Collectors.toSet()));
         }
 
         // 优先2：扫描package。 包扫描判断Ext注解
