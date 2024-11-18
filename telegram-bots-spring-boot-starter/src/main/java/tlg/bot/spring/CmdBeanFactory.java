@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.stereotype.Component;
 import tool.internal.cmd.CmdClass;
 import tool.internal.cmd.CmdMethod;
@@ -89,12 +89,12 @@ public class CmdBeanFactory implements ApplicationContextAware {
         return applicationContext.getBean(beanId, requiredType);
     }
 
-    private static AnnotationConfigApplicationContext applicationContext = null;
+    private static GenericApplicationContext applicationContext = null;
 
     @Override
     public void setApplicationContext(ApplicationContext ctx) throws BeansException {
         if (null == applicationContext) {
-            applicationContext = (AnnotationConfigApplicationContext) ctx;
+            applicationContext = (GenericApplicationContext) ctx;
         }
     }
 }
