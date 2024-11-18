@@ -16,6 +16,8 @@ public class CmdInfo {
     private String id;
     // to expression
     private String to;
+    // notes | tips
+    private String notes;
     // cmd class
     private Class<?> clazz;
 }

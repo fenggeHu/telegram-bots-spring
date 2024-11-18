@@ -15,6 +15,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import tlg.bot.BotConsumer;
 import tlg.bot.BotWriter;
 import tlg.bot.entity.Config;
+import tool.internal.cmd.CmdMethodKeeper;
 
 import java.util.List;
 
@@ -40,6 +41,8 @@ public class BotServerStarter implements CommandLineRunner {
     public void run(String... args) {
         // 登录Telegram Bots
         this.register(botProperties.getConfigs());
+        // 输出cmd完整日志
+        CmdMethodKeeper.log();
     }
 
     public void register(List<? extends Config> configs) {

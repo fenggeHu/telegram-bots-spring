@@ -27,6 +27,11 @@ public @interface Cmd {
     String to() default "";
 
     /**
+     * 注释
+     */
+    String notes() default "";
+
+    /**
      * 注解转Cmd information
      */
     class Builder {
@@ -39,7 +44,7 @@ public @interface Cmd {
             var ns = cmd.value().replace("//", "/").replace("//", "/").trim();
             String path = !ns.isEmpty() ? ns : method.getName();
             var id = ("/" + root + (path.startsWith("/") ? path : "/" + path)).replace("//", "/");
-            return CmdInfo.builder().id(id).to(cmd.to().trim()).clazz(method.getDeclaringClass()).build();
+            return CmdInfo.builder().id(id).to(cmd.to().trim()).notes(cmd.notes()).clazz(method.getDeclaringClass()).build();
         }
 
     }

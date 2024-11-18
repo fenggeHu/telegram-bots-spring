@@ -7,6 +7,7 @@ import tlg.bot.entity.Command;
 import tlg.bot.entity.Config;
 import tool.internal.cmd.Cmd;
 import tool.internal.cmd.CmdDTO;
+import tool.internal.cmd.CmdMethodKeeper;
 
 /**
  * @author max.hu  @date 2024/11/13
@@ -57,6 +58,7 @@ public class CmdBot extends BotWriter {
 
     @Cmd
     public void start(Command command) {
-        writeText(command.getChatId(), "Hello, "+command.chat().getFirstName());
+        var txt = "Hello, " + command.chat().getFirstName() + "\n" + CmdMethodKeeper.log();
+        writeText(command.getChatId(), txt);
     }
 }

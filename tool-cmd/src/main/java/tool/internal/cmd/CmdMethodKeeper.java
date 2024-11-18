@@ -1,6 +1,7 @@
 package tool.internal.cmd;
 
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -12,6 +13,7 @@ import java.util.Set;
  *
  * @author max.hu  @date 2024/11/04
  **/
+@Slf4j
 public class CmdMethodKeeper {
 
     // 所有实例化的对象
@@ -53,5 +55,19 @@ public class CmdMethodKeeper {
 
     public static void set(String base, CmdClass<?> cmdClass) {
         bootClasses.put(base, cmdClass);
+    }
+
+    // 输出日志
+    public static String log() {
+        var sb = new StringBuilder();
+        bootClasses.forEach((k, v) -> {
+            sb.append("Boot: ").append(k).append("===>\n");
+            v.getMethods().forEach((p, m) -> {
+                sb.append("\t").append(p).append(" -> ").append(m.getClazz().getName())
+                        .append(":").append(m.getMethod().getName()).append("\n");
+            });
+        });
+        log.info(sb.toString());
+        return sb.toString();
     }
 }
