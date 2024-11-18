@@ -3,6 +3,7 @@ package tlg.bot;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
@@ -19,6 +20,18 @@ public class BotWriterUtil {
     public static void text(final TelegramClient telegramClient, Long chatId, String txt) {
         if (StringUtils.isBlank(txt.trim())) return;    // api - 不能发送空消息
         var sm = SendMessage.builder().chatId(chatId).text(txt).build();
+        try {
+            // Execute it
+            telegramClient.execute(sm);
+        } catch (TelegramApiException e) {
+            log.error("write to tlg", e);
+        }
+    }
+
+    // write text
+    public static void html(final TelegramClient telegramClient, Long chatId, String html) {
+        if (StringUtils.isBlank(html.trim())) return;    // api - 不能发送空消息
+        var sm = SendMessage.builder().chatId(chatId).text(html).parseMode(ParseMode.HTML).build();
         try {
             // Execute it
             telegramClient.execute(sm);
