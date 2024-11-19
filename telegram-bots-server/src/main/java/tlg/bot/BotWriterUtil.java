@@ -28,7 +28,41 @@ public class BotWriterUtil {
         }
     }
 
-    // write text
+    // write markdown
+    public static void markdown(final TelegramClient telegramClient, Long chatId, String md) {
+        if (StringUtils.isBlank(md.trim())) return;    // api - 不能发送空消息
+        var sm = SendMessage.builder().chatId(chatId).text(escapeMarkdown(md)).parseMode(ParseMode.MARKDOWNV2).build();
+        try {
+            // Execute it
+            telegramClient.execute(sm);
+        } catch (TelegramApiException e) {
+            log.error("write to tlg", e);
+        }
+    }
+
+    private static String escapeMarkdown(String text) {
+        return text
+                .replace("_", "\\_")
+                .replace("+", "\\+")
+                .replace("-", "\\-")
+                .replace("#", "\\#")
+                .replace(".", "\\.")
+                .replace("*", "\\*")
+                .replace("=", "\\=")
+                .replace("~", "\\~")
+                .replace("`", "\\`")
+                .replace(">", "\\>")
+                .replace("(", "\\(")
+                .replace(")", "\\)")
+                .replace("[", "\\[")
+                .replace("]", "\\]")
+                .replace("{", "\\{")
+                .replace("}", "\\}")
+                .replace("|", "\\|")
+                .replace("!", "\\!");
+    }
+
+    // write html
     public static void html(final TelegramClient telegramClient, Long chatId, String html) {
         if (StringUtils.isBlank(html.trim())) return;    // api - 不能发送空消息
         var sm = SendMessage.builder().chatId(chatId).text(html).parseMode(ParseMode.HTML).build();
@@ -39,6 +73,29 @@ public class BotWriterUtil {
             log.error("write to tlg", e);
         }
     }
+
+    // InputStream
+//    public static void file(final TelegramClient telegramClient, Long chatId, InputStream is, String fileName) {
+//        InputFile inputFile = new InputFile(is, fileName);
+//        var sm = SendPhoto.builder().chatId(chatId).photo(inputFile).build();
+//        try {
+//            // Execute it
+//            telegramClient.execute(sm);
+//        } catch (TelegramApiException e) {
+//            log.error("write to tlg", e);
+//        }
+//    }
+
+//    public static void file(final TelegramClient telegramClient, Long chatId, File file) {
+//        InputFile inputFile = new InputFile(file);
+//        var sm = SendPhoto.builder().chatId(chatId).photo(inputFile).build();
+//        try {
+//            // Execute it
+//            telegramClient.execute(sm);
+//        } catch (TelegramApiException e) {
+//            log.error("write to tlg", e);
+//        }
+//    }
 
     @SneakyThrows
     public static void message(final TelegramClient telegramClient, SendMessage sendMessage) {
