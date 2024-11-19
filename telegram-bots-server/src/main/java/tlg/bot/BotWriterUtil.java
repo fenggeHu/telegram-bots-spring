@@ -31,7 +31,7 @@ public class BotWriterUtil {
     // write markdown
     public static void markdown(final TelegramClient telegramClient, Long chatId, String md) {
         if (StringUtils.isBlank(md.trim())) return;    // api - 不能发送空消息
-        var sm = SendMessage.builder().chatId(chatId).text(escapeMarkdown(md)).parseMode(ParseMode.MARKDOWNV2).build();
+        var sm = SendMessage.builder().chatId(chatId).text(md).parseMode(ParseMode.MARKDOWN).build();
         try {
             // Execute it
             telegramClient.execute(sm);
@@ -40,6 +40,7 @@ public class BotWriterUtil {
         }
     }
 
+    // 使用MarkdownV2时需要转码
     private static String escapeMarkdown(String text) {
         return text
                 .replace("_", "\\_")
