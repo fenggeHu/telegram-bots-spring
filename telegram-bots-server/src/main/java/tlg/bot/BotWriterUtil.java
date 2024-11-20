@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
 
 /**
@@ -20,24 +19,21 @@ public class BotWriterUtil {
     public static void text(final TelegramClient telegramClient, Long chatId, String txt) {
         if (StringUtils.isBlank(txt.trim())) return;    // api - 不能发送空消息
         var sm = SendMessage.builder().chatId(chatId).text(txt).build();
-        try {
-            // Execute it
-            telegramClient.execute(sm);
-        } catch (TelegramApiException e) {
-            log.error("write to tlg", e);
-        }
+        sendMessage(telegramClient, sm);
     }
 
     // write markdown - telegram app 显示不了markdown？？？
     public static void markdown(final TelegramClient telegramClient, Long chatId, String md) {
         if (StringUtils.isBlank(md.trim())) return;    // api - 不能发送空消息
         var sm = SendMessage.builder().chatId(chatId).parseMode(ParseMode.MARKDOWN).text(md).build();
-        try {
-            // Execute it
-            telegramClient.execute(sm);
-        } catch (TelegramApiException e) {
-            log.error("write to tlg", e);
-        }
+        sendMessage(telegramClient, sm);
+    }
+
+    public static void markdownV2(final TelegramClient telegramClient, Long chatId, String md) {
+        if (StringUtils.isBlank(md.trim())) return;    // api - 不能发送空消息
+        var sm = SendMessage.builder().chatId(chatId).parseMode(ParseMode.MARKDOWNV2)
+                .text(escapeMarkdownV2(md)).build();
+        sendMessage(telegramClient, sm);
     }
 
     // 使用MarkdownV2时需要转码
@@ -81,12 +77,7 @@ public class BotWriterUtil {
     public static void html(final TelegramClient telegramClient, Long chatId, String html) {
         if (StringUtils.isBlank(html.trim())) return;    // api - 不能发送空消息
         var sm = SendMessage.builder().chatId(chatId).text(html).parseMode(ParseMode.HTML).build();
-        try {
-            // Execute it
-            telegramClient.execute(sm);
-        } catch (TelegramApiException e) {
-            log.error("write to tlg", e);
-        }
+        sendMessage(telegramClient, sm);
     }
 
     // InputStream
@@ -113,7 +104,7 @@ public class BotWriterUtil {
 //    }
 
     @SneakyThrows
-    public static void message(final TelegramClient telegramClient, SendMessage sendMessage) {
+    public static void sendMessage(final TelegramClient telegramClient, SendMessage sendMessage) {
         telegramClient.execute(sendMessage);
     }
 }
