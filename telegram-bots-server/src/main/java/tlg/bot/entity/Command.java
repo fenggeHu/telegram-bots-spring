@@ -1,7 +1,10 @@
 package tlg.bot.entity;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.chat.Chat;
@@ -17,8 +20,11 @@ import java.util.regex.Pattern;
  *
  * @author max.hu  @date 2024/10/28
  **/
-@Data
-@Builder
+@Setter
+@Getter
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Command {
     public Long chatId;
     // 指令exe /command
