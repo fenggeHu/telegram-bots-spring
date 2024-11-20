@@ -41,7 +41,7 @@ public class BotWriterUtil {
     }
 
     // 使用MarkdownV2时需要转码
-    private static String escapeMarkdown(String text) {
+    private static String escapeMarkdownV2(String text) {
         return text
                 .replace("_", "\\_")
                 .replace("+", "\\+")
