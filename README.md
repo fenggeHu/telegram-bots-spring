@@ -1,4 +1,4 @@
-# Telegram机器人的功能
+# Telegram机器人的功能 -- for study & tests
 https://core.telegram.org/bots/features
 - 实现自定义键盘
 - 处理回调查询
