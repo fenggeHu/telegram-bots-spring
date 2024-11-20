@@ -7,7 +7,6 @@ import tool.internal.bb.Interceptor;
 import tool.utils.ExpressionParser;
 
 import java.lang.reflect.Method;
-import java.util.Objects;
 import java.util.concurrent.Callable;
 
 /**
@@ -45,7 +44,10 @@ public class CmdInterceptor extends Interceptor {
         String to = cmdDTO.to();
         if (!to.isEmpty()) {
             CmdMethod<?> next = CmdMethodKeeper.getMethod(ths, to);
-            return Objects.requireNonNull(next).invoke(cmdDTO.getArgs());
+            if (null == next) {
+                throw new RuntimeException("CmdMethod - Command not found: " + to);
+            }
+            return next.invoke(cmdDTO.getArgs());
         } else {
             throw new RuntimeException(method.getDeclaringClass().getName() + "." + method.getName() + " - CmdMethod: " + cmdDTO);
         }
