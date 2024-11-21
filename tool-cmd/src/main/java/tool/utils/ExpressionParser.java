@@ -6,7 +6,6 @@ import org.mvel2.ParserContext;
 import org.mvel2.templates.CompiledTemplate;
 import org.mvel2.templates.TemplateCompiler;
 import org.mvel2.templates.TemplateRuntime;
-import tool.internal.cmd.CmdInfo;
 
 import java.util.Arrays;
 import java.util.Collections;
