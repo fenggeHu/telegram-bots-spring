@@ -121,29 +121,4 @@ public class ExpressionParser {
         return PrimitiveValueUtil.boolValue(result);
     }
 
-    public static void main(String[] args) {
-        Map<String, Object> vars = new HashMap<>();
-        CmdInfo ci1 = CmdInfo.builder().id("hello").to("world").notes("teeee").build();
-        CmdInfo ci2 = CmdInfo.builder().id("id2").to("world").notes("i'm 2").build();
-        vars.put("ci1", ci1);
-        vars.put("ci2", ci2);
-        var r1 = execute("${ci1.to} == ${ci2.to}", vars);
-        System.out.println(r1);
-        var r2 = execute("${ci1.to} == ${ci2.notes}", vars);
-        System.out.println(r2);
-        var r3 = execute("${x0.to} == ${notes}", ci1);
-        System.out.println(r3);
-        var r4 = execute("${x0}", 123);
-        System.out.println(r4);
-
-        var v1 = eval("ci1.to == ci2.to", vars);
-        System.out.println(v1);
-        var v2 = eval("ci1.to == ci2.notes", vars);
-        System.out.println(v2);
-        var v3 = eval("x0.to == notes", ci1);
-        System.out.println(v3);
-        var v4 = eval("x0", 123);
-        System.out.println(v4);
-    }
-
 }
