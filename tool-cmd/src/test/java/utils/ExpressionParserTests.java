@@ -11,19 +11,38 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * @author max.hu  @date 2024/11/15
  **/
 public class ExpressionParserTests {
+    static Pattern pattern = Pattern.compile("-?\\d+(\\.\\d+)?"); // 整数或小数
+
     @Test
     public void testNumber() {
+        long start = System.currentTimeMillis();
+        for (int i = 0; i < 10000; i++) {
+            var b = isNumeric("-0.0011001012");
+            b = isNumeric("-11.0010123");
+            b = isNumeric("-11001012.3");
+            b = isNumeric("110010123");
+            b = isNumeric("adf12");
+            b = isNumeric("1243.2df");
+            b = isNumeric("1.1001012E3");
+        }
+        System.out.println(System.currentTimeMillis() - start);
+
         long l = 1234567890123456L;
         System.out.println(l);
         System.out.println(PrimitiveValueUtil.stringValue(l));
         double d = 10000000000.123;
         System.out.println(PrimitiveValueUtil.stringValue(d));
         System.out.println(BigDecimal.valueOf(d).toPlainString());
+    }
+
+    public static boolean isNumeric(String str) {
+        return pattern.matcher(str).matches();
     }
 
     @Test
