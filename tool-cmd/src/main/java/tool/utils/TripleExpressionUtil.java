@@ -12,9 +12,10 @@ import java.util.regex.Pattern;
 public class TripleExpressionUtil {
 
     // &&
-    public static boolean and(boolean bool, Triple<String, String, String> tx, Object... args) {
-        return bool && ExpressionParser.boolX(tx.left + tx.middle + tx.right, args);
+    public static boolean and(boolean bool, Triple<String, String, String> tx, Object... ctx) {
+        return bool && ExpressionParser.bool(tx.left + tx.middle + tx.right, ctx);
     }
+
     // && 一组表达式
     public static boolean and(List<Triple<String, String, String>> txs, Object... args) {
         boolean bool = true;
@@ -56,23 +57,34 @@ public class TripleExpressionUtil {
         return triples;
     }
 
-    public static Triple<String, String, String> explain(String relation, Map<String, String> keyFields, String obj) {
+    public static List<Triple<String, String, String>> explain(String[] relations, Map<String, String> keyFields) {
+        return explain(relations, keyFields, null);
+    }
+
+    public static Triple<String, String, String> explain(String relation, Map<String, String> fields) {
+        return explain(relation, fields, null);
+    }
+
+    public static Triple<String, String, String> explain(String relation, Map<String, String> fields, String obj) {
         var triple = extractRelation(relation);
         if (null == triple) return null;
-        var lf = keyFields.get(triple.left);
+        var lf = fields.get(triple.left);
         if (null != lf) {
             if (null == obj) {
-                triple.setLeft("${" + lf + "}");
+                triple.setLeft(lf);
             } else {
-                triple.setLeft("${" + obj + "." + lf + "}");
+                triple.setLeft(obj + "." + lf);
             }
         }
-        var rf = keyFields.get(triple.right);
+        if (triple.middle.equals("=")) {
+            triple.setMiddle("==");
+        }
+        var rf = fields.get(triple.right);
         if (null != rf) {
             if (null == obj) {
-                triple.setRight("${" + rf + "}");
+                triple.setRight(rf);
             } else {
-                triple.setRight("${" + obj + "." + rf + "}");
+                triple.setRight(obj + "." + rf);
             }
         }
         return triple;

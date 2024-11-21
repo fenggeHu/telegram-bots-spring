@@ -6,6 +6,7 @@ import org.mvel2.ParserContext;
 import org.mvel2.templates.CompiledTemplate;
 import org.mvel2.templates.TemplateCompiler;
 import org.mvel2.templates.TemplateRuntime;
+import tool.internal.cmd.CmdInfo;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -14,19 +15,21 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * 关于MVEL传参的用法：
+ * TemplateRuntime.execute 和 MVEL.eval的上下文参数都可以传入2个：Object ctx和Map<String, Object> vars
+ * ctx:  传入对象，在表达式里使用对象的属性。如ctx = new User(id=10)，则表达式“id==10”返回True
+ * vars: 传入Map，在表达式里使用key.对象的属性。
+ * CmdInfo ci1 = CmdInfo.builder().id("hello").to("world").notes("teeee").build();
+ * CmdInfo ci2 = CmdInfo.builder().id("id2").to("world").notes("I'm 20").build();
+ * vars.put("ci1", ci1);
+ * vars.put("ci2", ci2);
+ * var result = MVEL.eval("ci1.to == ci2.to", vars); // return True
+ *
  * @author max.hu  @date 2024/11/6
  * @description 解析表达式
  **/
 public class ExpressionParser {
     private static final Map<String, CompiledTemplate> cached = new ConcurrentHashMap<>();
-
-    // 把expression当作cache key
-    public static String str(String expression, Map<String, Object> vars) {
-        if (null == expression || expression.isEmpty()) {
-            return expression;
-        }
-        return str(expression, expression, vars);
-    }
 
     // 使用ParserContext引入常用类
     private static ParserContext parserContext = new ParserContext();
@@ -37,37 +40,9 @@ public class ExpressionParser {
         parserContext.addImport(Collections.class);
     }
 
-    public static Object execute(String key, String expression, Map<String, Object> vars) {
-        CompiledTemplate template = cached.computeIfAbsent(key,
-                k -> TemplateCompiler.compileTemplate(expression, parserContext));
-        try {
-            return TemplateRuntime.execute(template, vars);
-        } catch (Exception e) {
-            throw new RuntimeException(key + " - Please check expression: " + expression, e);
-        }
-    }
-
-    // 转成字符串
-    public static String str(String key, String expression, Map<String, Object> vars) {
-        if (null == expression || expression.isEmpty()) {
-            return expression;
-        }
-        var result = execute(key, expression, vars);
-        return null == result ? null : String.valueOf(result);
-    }
-
-    // 其它的变形
-    public static boolean boolX(String expression, Object... args) {
-        if (null == expression || expression.isEmpty()) {
-            return Boolean.FALSE;
-        }
-
-        Map<String, Object> vars = xVars(args);
-        var expr = str(expression, vars);   // TODO 能不能一步到位？
-        var result = MVEL.eval(expr);
-        return PrimitiveValueUtil.boolValue(result);
-    }
-
+    /**
+     * 用x0...n当作Map变量key
+     */
     private static Map<String, Object> xVars(Object... args) {
         Map<String, Object> vars = new HashMap<>();
         for (int i = 0; i < args.length; i++) {
@@ -76,17 +51,99 @@ public class ExpressionParser {
         return vars;
     }
 
-    /**
-     * 用x0...n表示变量key
-     */
+    //根据传入的args长度处理
+    public static Object execute(String expression, Object... args) {
+        CompiledTemplate template = cached.computeIfAbsent(expression,
+                k -> TemplateCompiler.compileTemplate(expression, parserContext));
+        try {
+            // 处理参数规则
+            if (args.length == 1) { // 只有一个参数的时候可以同时使用对象的属性和Map的Xn.属性
+                if (args[0] instanceof Map) {   // 单独处理入参为Map的情况
+                    return TemplateRuntime.execute(template, args[0]);
+                } else {
+                    Map<String, Object> vars = xVars(args); // 用x0...n当作Map变量key
+                    return TemplateRuntime.execute(template, args[0], vars);
+                }
+            } else {
+                Map<String, Object> vars = xVars(args); // 用x0...n当作Map变量key
+                return TemplateRuntime.execute(template, vars);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Please check expression: " + expression, e);
+        }
+    }
+
+
     @SneakyThrows
-    public static String strX(String expression, Object... args) {
+    public static String str(String expression, Object... args) {
         if (null == expression || expression.isEmpty()) {
             return expression;
         }
-
-        Map<String, Object> vars = xVars(args);
-
-        return str(expression, vars);
+        var result = execute(expression, args);
+        return PrimitiveValueUtil.stringValue(result);
     }
+
+    /**
+     * 计算表达式
+     *
+     * @param expression
+     * @param args
+     * @return
+     */
+    public static Object eval(String expression, Object... args) {
+        if (null == expression || expression.isEmpty()) {
+            return expression;
+        }
+        try {
+            // 处理参数规则
+            if (args.length == 1) { // 只有一个参数的时候可以同时使用对象的属性和Map的Xn.属性
+                if (args[0] instanceof Map) {   // 单独处理入参为Map的情况
+                    return MVEL.eval(expression, args[0]);
+                } else {
+                    Map<String, Object> vars = xVars(args); // 用x0...n当作Map变量key
+                    return MVEL.eval(expression, args[0], vars);
+                }
+            } else {
+                Map<String, Object> vars = xVars(args); // 用x0...n当作Map变量key
+                return MVEL.eval(expression, vars);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Please check expression and args: " + expression, e);
+        }
+    }
+
+    public static boolean bool(String expression, Object... args) {
+        if (null == expression || expression.isEmpty()) {
+            return Boolean.FALSE;
+        }
+
+        var result = eval(expression, args);
+        return PrimitiveValueUtil.boolValue(result);
+    }
+
+    public static void main(String[] args) {
+        Map<String, Object> vars = new HashMap<>();
+        CmdInfo ci1 = CmdInfo.builder().id("hello").to("world").notes("teeee").build();
+        CmdInfo ci2 = CmdInfo.builder().id("id2").to("world").notes("i'm 2").build();
+        vars.put("ci1", ci1);
+        vars.put("ci2", ci2);
+        var r1 = execute("${ci1.to} == ${ci2.to}", vars);
+        System.out.println(r1);
+        var r2 = execute("${ci1.to} == ${ci2.notes}", vars);
+        System.out.println(r2);
+        var r3 = execute("${x0.to} == ${notes}", ci1);
+        System.out.println(r3);
+        var r4 = execute("${x0}", 123);
+        System.out.println(r4);
+
+        var v1 = eval("ci1.to == ci2.to", vars);
+        System.out.println(v1);
+        var v2 = eval("ci1.to == ci2.notes", vars);
+        System.out.println(v2);
+        var v3 = eval("x0.to == notes", ci1);
+        System.out.println(v3);
+        var v4 = eval("x0", 123);
+        System.out.println(v4);
+    }
+
 }
