@@ -22,6 +22,7 @@ public class PrimitiveValueUtil {
     /**
      * 判断对象是否是数字类型
      * - 与isNumeric用法不同
+     *
      * @param value
      * @return
      */
@@ -32,6 +33,7 @@ public class PrimitiveValueUtil {
     /**
      * 判断字符串是否是数字
      * - 与isNumber用法不同
+     *
      * @param str
      * @return
      */
@@ -107,7 +109,12 @@ public class PrimitiveValueUtil {
     public static String getAsString(Object value) {
         if (null == value) return null;
         if (isNumber(value)) {
-            return getAsNumber(value).toString();
+            Number num = getAsNumber(value);
+            if (num instanceof Double) {
+                return BigDecimal.valueOf((double) num).toPlainString();
+            } else {
+                return num.toString();
+            }
         } else if (isBoolean(value)) {
             return ((Boolean) value).toString();
         } else {

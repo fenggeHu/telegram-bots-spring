@@ -3,8 +3,10 @@ package utils;
 import org.junit.jupiter.api.Test;
 import tool.internal.cmd.CmdInfo;
 import tool.utils.ExpressionParser;
+import tool.utils.PrimitiveValueUtil;
 import tool.utils.TripleExpressionUtil;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,6 +16,15 @@ import java.util.Map;
  * @author max.hu  @date 2024/11/15
  **/
 public class ExpressionParserTests {
+    @Test
+    public void testNumber() {
+        long l = 1234567890123456L;
+        System.out.println(l);
+        System.out.println(PrimitiveValueUtil.stringValue(l));
+        double d = 10000000000.123;
+        System.out.println(PrimitiveValueUtil.stringValue(d));
+        System.out.println(BigDecimal.valueOf(d).toPlainString());
+    }
 
     @Test
     public void testRegexParser() {
@@ -31,6 +42,7 @@ public class ExpressionParserTests {
         var t11 = TripleExpressionUtil.extractRelation("A!=B*c");
         System.out.println();
     }
+
     @Test
     public void testCollectionParser() {
         var arr = new String[]{"a1", "a2", "a3"};

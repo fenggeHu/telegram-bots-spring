@@ -3,6 +3,7 @@ package tool.utils;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -90,4 +91,25 @@ public class TripleExpressionUtil {
         return triple;
     }
 
+    // 解析数字符 - K、M、B
+    private static final Set<String> numUnits = Set.of("K", "k", "M", "m", "B", "b");
+
+    // 简单处理右侧的数字
+    public static void doRNumUnit(final List<Triple<String, String, String>> triples) {
+        triples.forEach(e -> doRNumUnit(e));
+    }
+
+    public static void doRNumUnit(final Triple<String, String, String> triple) {
+        var num = triple.right.substring(0, triple.right.length() - 1);
+        var sign = triple.right.substring(triple.right.length() - 1);
+        if (PrimitiveValueUtil.isNumeric(num) && numUnits.contains(sign)) {
+            if (sign.equalsIgnoreCase("K")) {
+                triple.setRight(PrimitiveValueUtil.stringValue(PrimitiveValueUtil.doubleValue(num) * 1000));
+            } else if (sign.equalsIgnoreCase("M")) {
+                triple.setRight(PrimitiveValueUtil.stringValue(PrimitiveValueUtil.doubleValue(num) * 1000000));
+            } else if (sign.equalsIgnoreCase("B")) {
+                triple.setRight(PrimitiveValueUtil.stringValue(PrimitiveValueUtil.doubleValue(num) * 1000000000));
+            }
+        }
+    }
 }
