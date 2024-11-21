@@ -25,7 +25,7 @@ public class TripleExpressionUtil {
         return bool;
     }
 
-    private static final String regex = "([A-Za-z0-9]+)\\s*(<=|>=|<|>|=)\\s*([A-Za-z0-9]+|[0-9]+\\.?[0-9]*)$";
+    private static final String regex = "(.*?)([<>!=]=?|=)(.*)";    // 按比较运算符分隔
     private static final Pattern pattern = Pattern.compile(regex);
 
     public static Triple<String, String, String> extractRelation(String relationString) {

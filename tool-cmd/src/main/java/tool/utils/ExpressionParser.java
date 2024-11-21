@@ -28,6 +28,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * @description 解析表达式
  **/
 public class ExpressionParser {
+    // 空格
+    public static final String SPACE = " ";
     private static final Map<String, CompiledTemplate> cached = new ConcurrentHashMap<>();
 
     // 使用ParserContext引入常用类

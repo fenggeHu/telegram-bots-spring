@@ -3,6 +3,7 @@ package utils;
 import org.junit.jupiter.api.Test;
 import tool.internal.cmd.CmdInfo;
 import tool.utils.ExpressionParser;
+import tool.utils.TripleExpressionUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,6 +15,22 @@ import java.util.Map;
  **/
 public class ExpressionParserTests {
 
+    @Test
+    public void testRegexParser() {
+        var t1 = TripleExpressionUtil.extractRelation("A>2.5B");
+        var t2 = TripleExpressionUtil.extractRelation("A>=2.5B");
+        var t4 = TripleExpressionUtil.extractRelation("A<2.5");
+        var t5 = TripleExpressionUtil.extractRelation("A<=2500");
+        var t3 = TripleExpressionUtil.extractRelation("A=2.5B");
+        var t6 = TripleExpressionUtil.extractRelation("3A<B+c");
+        var t7 = TripleExpressionUtil.extractRelation("2.5A+B<c");
+        var t72 = TripleExpressionUtil.extractRelation("A+B<c");
+        var t8 = TripleExpressionUtil.extractRelation("A=B+c");
+        var t9 = TripleExpressionUtil.extractRelation("A=B*c");
+        var t10 = TripleExpressionUtil.extractRelation("A==B*c");
+        var t11 = TripleExpressionUtil.extractRelation("A!=B*c");
+        System.out.println();
+    }
     @Test
     public void testCollectionParser() {
         var arr = new String[]{"a1", "a2", "a3"};
