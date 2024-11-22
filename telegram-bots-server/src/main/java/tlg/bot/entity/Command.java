@@ -43,6 +43,10 @@ public class Command {
         return message().getChat();
     }
 
+    // 解析parameter - 空格分隔
+    public String[] args() {
+        return this.parameter.split(" ");
+    }
     // 解析parameter。 key：--key， kv空格分隔
     // 格式： -x 124 -y 4354 -z -a hello
     private static final Pattern pattern = Pattern.compile("-([a-zA-Z0-9-]+)(?:\\s+([^\s-]+))?");
