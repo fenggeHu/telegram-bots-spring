@@ -13,17 +13,13 @@ import java.util.regex.Pattern;
 public class TripleExpressionUtil {
 
     // &&
-    public static boolean and(boolean bool, Triple<String, String, String> tx, Object... ctx) {
-        return bool && ExpressionParser.bool(tx.left + tx.middle + tx.right, ctx);
+    public static boolean bool(Triple<String, String, String> tx, Object... ctx) {
+        return ExpressionParser.bool(tx.left + tx.middle + tx.right, ctx);
     }
 
     // && 一组表达式
     public static boolean and(List<Triple<String, String, String>> txs, Object... args) {
-        boolean bool = true;
-        for (var tx : txs) {
-            bool = and(bool, tx, args);
-        }
-        return bool;
+        return txs.stream().allMatch(tx -> bool(tx, args));
     }
 
     private static final String regex = "(.*?)([<>!=]=?|=)(.*)";    // 按比较运算符分隔
