@@ -37,6 +37,7 @@ public class ExpressionParser {
 //        parserContext.setStrictTypeEnforcement(true);
         parserContext.addImport(Arrays.class);
         parserContext.addImport(Collections.class);
+        parserContext.addImport("PV", PrimitiveValueUtil.class);
     }
 
     /**
