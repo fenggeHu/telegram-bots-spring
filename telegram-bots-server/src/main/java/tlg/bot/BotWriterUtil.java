@@ -22,7 +22,7 @@ public class BotWriterUtil {
         sendMessage(telegramClient, sm);
     }
 
-    // write markdown - telegram app 显示不了markdown？？？
+    // write markdown
     public static void markdown(final TelegramClient telegramClient, Long chatId, String md) {
         if (StringUtils.isBlank(md.trim())) return;    // api - 不能发送空消息
         var sm = SendMessage.builder().chatId(chatId).parseMode(ParseMode.MARKDOWN).text(md).build();
