@@ -41,6 +41,7 @@ public class CmdInterceptor extends Interceptor {
         }
 
         if (cmdDTO == null) {
+            log.info("{}.{} return null", method.getDeclaringClass().getName(), method.getName());
             return null;
         }
         // 执行跳转
