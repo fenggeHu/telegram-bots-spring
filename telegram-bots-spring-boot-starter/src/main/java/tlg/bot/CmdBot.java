@@ -1,13 +1,13 @@
 package tlg.bot;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.message.Message;
 import tlg.bot.entity.Command;
 import tlg.bot.entity.Config;
 import tool.internal.cmd.Cmd;
 import tool.internal.cmd.CmdDTO;
-import tool.internal.cmd.CmdMethodKeeper;
 
 /**
  * @author max.hu  @date 2024/11/13
@@ -56,9 +56,18 @@ public class CmdBot extends BotWriter {
         return CmdDTO.of(cmd.getExe(), cmd);
     }
 
+    /**
+     * 使用start做链接跳转
+     * // 经过测试：1，只有start成功；2，那么，经过start再跳转。
+     * // 3，经过start跳转到command；4，command字符串支持字母、数字、横杠-、下划线_、等号=
+     * // 结论 - 定义规则：使用kv表达command，用下划线代表空格
+     * @param command
+     */
     @Cmd
     public void start(Command command) {
-        var txt = "Hello, " + command.chat().getFirstName() + "\n" + CmdMethodKeeper.log();
-        writeText(command.getChatId(), txt);
+        if (StringUtils.isNoneBlank(command.getParameter())) {
+
+        }
     }
+
 }
