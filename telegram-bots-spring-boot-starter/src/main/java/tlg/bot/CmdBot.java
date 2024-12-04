@@ -61,13 +61,30 @@ public class CmdBot extends BotWriter {
      * // 经过测试：1，只有start成功；2，那么，经过start再跳转。
      * // 3，经过start跳转到command；4，command字符串支持字母、数字、横杠-、下划线_、等号=
      * // 结论 - 定义规则：使用kv表达command，用下划线代表空格
+     *
      * @param command
      */
     @Cmd
-    public void start(Command command) {
+    public CmdDTO start(Command command) {
         if (StringUtils.isNoneBlank(command.getParameter())) {
-
+            var cmd = jump(command.getParameter());
+            cmd.setChatId(cmd.getChatId());
+            cmd.setUpdate(command.getUpdate());
+            return CmdDTO.of(cmd.getExe()).putArgs(cmd);
         }
+
+        return null;
     }
 
+    // 按照规则解析跳转
+    private Command jump(String param) {
+        // 1,先取得命令
+        int index = param.indexOf("=");
+        if (index <= 0) {
+            return Command.of(param, null);
+        }
+        // 解析参数
+        String cmd = param.substring(0, index);
+        return Command.of(cmd, param.substring(index + 1));
+    }
 }

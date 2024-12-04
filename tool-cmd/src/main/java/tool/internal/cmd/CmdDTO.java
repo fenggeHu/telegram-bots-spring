@@ -20,7 +20,7 @@ public class CmdDTO {
     private String id;
     // to expression
     private String to;
-    // args - input parameters
+    // to Method: args - input parameters
     private Object[] args;
 
     public CmdDTO putArgs(Object... objects) {

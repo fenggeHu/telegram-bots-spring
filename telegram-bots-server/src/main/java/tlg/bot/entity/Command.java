@@ -47,6 +47,7 @@ public class Command {
     public String[] args() {
         return this.parameter.split(" ");
     }
+
     // 解析parameter。 key：--key， kv空格分隔
     // 格式： -x 124 -y 4354 -z -a hello
     private static final Pattern pattern = Pattern.compile("-([a-zA-Z0-9-]+)(?:\\s+([^\s-]+))?");
@@ -92,5 +93,9 @@ public class Command {
         var cmd = of(update.getMessage());
         cmd.setUpdate(update);
         return cmd;
+    }
+
+    public static Command of(String exe, String parameter) {
+        return Command.builder().exe(exe).parameter(parameter).build();
     }
 }
