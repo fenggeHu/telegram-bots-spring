@@ -68,7 +68,7 @@ public class CmdBot extends BotWriter {
     public CmdDTO start(Command command) {
         if (StringUtils.isNoneBlank(command.getParameter())) {
             var cmd = jump(command.getParameter());
-            cmd.setChatId(cmd.getChatId());
+            cmd.setChatId(command.getChatId());
             cmd.setUpdate(command.getUpdate());
             return CmdDTO.of(cmd.getExe()).putArgs(cmd);
         }
