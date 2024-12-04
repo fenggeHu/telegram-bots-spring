@@ -40,6 +40,9 @@ public class CmdInterceptor extends Interceptor {
             cmdDTO = CmdDTO.builder().to(to).args(args).build();
         }
 
+        if (cmdDTO == null) {
+            return null;
+        }
         // 执行跳转
         String to = cmdDTO.to();
         if (!to.isEmpty()) {
