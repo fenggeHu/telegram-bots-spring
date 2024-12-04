@@ -23,7 +23,7 @@
         <lombok.version>1.18.34</lombok.version>
         <spring.boot.version>2.7.18</spring.boot.version>
         <!-- dev version -->
-        <dev.version>1.1-SNAPSHOT</dev.version>
+        <dev.version>0.2.1</dev.version>
         <tool-cmd.version>${dev.version}</tool-cmd.version>
         <bots-server.version>${dev.version}</bots-server.version>
         <telegram-bots-spring-boot-starter.version>${dev.version}</telegram-bots-spring-boot-starter.version>
