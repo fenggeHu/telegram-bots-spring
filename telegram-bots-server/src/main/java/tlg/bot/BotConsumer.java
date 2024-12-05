@@ -1,8 +1,5 @@
 package tlg.bot;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -22,10 +19,6 @@ import java.util.List;
  **/
 @Slf4j
 public abstract class BotConsumer implements LongPollingSingleThreadUpdateConsumer {
-    protected static final ObjectMapper mapper = new ObjectMapper()
-            // 设置在反序列化时忽略在JSON字符串中存在，而在Java中不存在的属性
-            .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
-            .setSerializationInclusion(JsonInclude.Include.NON_NULL);
     // Consume handlers
     protected final List<ConsumeHandler> consumeHandlers = new LinkedList<>();
     @Getter
@@ -56,7 +49,6 @@ public abstract class BotConsumer implements LongPollingSingleThreadUpdateConsum
 
     // 处理消息
     @Override
-    @SneakyThrows
     public void consume(Update update) {
         for (ConsumeHandler ch : consumeHandlers) {
             if (ch.matched(update)) {
