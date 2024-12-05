@@ -1,6 +1,7 @@
 package tlg.bot.handler;
 
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.lang.reflect.Method;
@@ -12,6 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @author max.hu  @date 2024/12/04
  **/
+@Slf4j
 public class InteractiveConsumeHandler implements ConsumeHandler {
     //缓存： object -> methodName -> method：使用时注意同一个对象的同名方法只能有一个
     private final Map<Object, Map<String, Method>> methods = new ConcurrentHashMap<>();
@@ -33,6 +35,23 @@ public class InteractiveConsumeHandler implements ConsumeHandler {
 
     @SneakyThrows
     private Method getMethod(Object owner, String methodName, Class<?>... parameterTypes) {
-        return owner.getClass().getMethod(methodName, parameterTypes);
+        return this.getDeclaredMethod(owner.getClass(), methodName, parameterTypes);
+    }
+
+    // 查找第一个匹配的方法 - 从子类逐步往父类找
+    @SneakyThrows
+    public static Method getDeclaredMethod(Class clazz, String name, Class<?>... parameterTypes) {
+        Method method = null;
+        try {
+            method = clazz.getDeclaredMethod(name, parameterTypes);
+            return method;  // clazz.getDeclaredMethod 返回值不为空
+        } catch (Exception e) {
+            log.warn("No Method: {}.{}", clazz.getName(), name);
+        }
+        Class sc = clazz.getSuperclass();
+        if (null != sc) {
+            method = getDeclaredMethod(sc, name, parameterTypes);
+        }
+        return method;
     }
 }

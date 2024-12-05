@@ -11,6 +11,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
+ * get declared method - 开发定义的本类的方法，即排除了jdk的方法
+ * get method - 包含本来和父类（含jkd/Object类）的所以public方法
  * @author jinfeng.hu  @Date 2022/8/29
  * @Description:
  **/
@@ -19,6 +21,22 @@ public class ClassUtil {
     @SneakyThrows
     public static Class getClass(String className) {
         return Class.forName(className);
+    }
+
+    // 查找第一个匹配类的公开方法 - 从子类往父类递归找到第一个匹配的
+    public static Method getDeclaredMethod(Class clazz, String name, Class<?>... parameterTypes) {
+        Method method = null;
+        try {
+            method = clazz.getDeclaredMethod(name, parameterTypes);
+            return method;  // clazz.getDeclaredMethod 返回值不为空
+        } catch (Exception e) {
+            log.warn("No Method: {}.{}", clazz.getName(), name);
+        }
+        Class sc = clazz.getSuperclass();
+        if (null != sc) {
+            method = getDeclaredMethod(sc, name, parameterTypes);
+        }
+        return method;
     }
 
     // 比较2个方法的入参是否一致
