@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * 需要与对象交互的ConsumeHandler
+ * 需要与owner对象交互的ConsumeHandler
  *
  * @author max.hu  @date 2024/12/04
  **/
