@@ -1,3 +1,14 @@
+# 数据链路
+- 使用ConsumeHandler消费telegram的Update
+- 执行链路如下：
+```
+telegram Update
+    -> Bot.consume
+        -> ConsumeHandler.matched == true
+            -> ConsumeHandler.execute == true   
+                -> next ConsumeHandler
+```
+
 # Telegram机器人的功能 -- for study & tests
 https://core.telegram.org/bots/features
 - 实现自定义键盘
