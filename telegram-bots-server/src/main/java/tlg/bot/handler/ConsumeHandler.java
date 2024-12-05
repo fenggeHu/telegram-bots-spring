@@ -13,5 +13,5 @@ public interface ConsumeHandler {
 
     // 当 matched = true时执行本方法
     // 返回值：是否继续下一个handler。 true - 执行； false - 不执行
-    boolean execute(final Update update, Object owner);
+    boolean execute(final Update update, final Object owner);
 }
