@@ -16,19 +16,28 @@ public class Config {
     private String token;
     // Bot实现类
     private String botClassName;
+    // ConsumeHandler - 配置类名
+    private String[] consumes;
 
     // setter
     public void setId(String id) {
         if (this.id == null) this.id = id;
     }
+
     public void setName(String name) {
         if (this.name == null) this.name = name;
     }
+
     public void setToken(String token) {
         if (this.token == null) this.token = token;
     }
+
     public void setBotClassName(String className) {
         if (this.botClassName == null) this.botClassName = className;
+    }
+
+    public void setConsumes(String[] consumes) {
+        if (this.consumes == null) this.consumes = consumes;
     }
 
     // deep linking

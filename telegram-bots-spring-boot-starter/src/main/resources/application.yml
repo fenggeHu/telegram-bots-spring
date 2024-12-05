@@ -13,15 +13,19 @@ bot:
     - id: xxxx1_Bot
       name: fengge
       token: 123456:AAeReplace39MAJAn1u1s
+      consumes:
+        - tlg.bot.handler.CommandHandler
+        - tlg.bot.handler.UserMessageHandler
       bot-class-name: tlg.busi1.Bot1
-      ext-class:
-        - eb.busi1.Bot1Extension
-      ext-package:
-        - eb.busi1
+      ext-class: eb.busi1.Bot1Extension
+      ext-package: eb.busi1
 
     - id: max_hu_assistant_bot
       name: Mini Assistant
       token: 2424121414:TOKEN_Zq9y3replace84304thisVBA
+      consumes:
+        - tlg.bot.handler.CommandHandler
+        - tlg.bot.handler.UserMessageHandler
       bot-class-name: tlg.bus2.Bot2
 
 logging:

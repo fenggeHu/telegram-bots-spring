@@ -3,7 +3,6 @@ package tlg.bot;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.message.Message;
 import tlg.bot.entity.Command;
 import tlg.bot.entity.Config;
 import tool.internal.cmd.Cmd;
@@ -18,40 +17,8 @@ public class CmdBot extends BotWriter {
         super(config);
     }
 
-    // 需要实现
-    public void handleMessage(final Update update) {
-        Message message = update.getMessage();
-        if (message.isCommand()) {
-            this.doCommand(update);
-        } else if (message.isUserMessage()) {
-            this.doUserMessage(message);
-        } else if (message.isChannelMessage()) {
-            log.info("channel message: {}", message.getText());
-        } else if (message.isGroupMessage()) {
-            log.info("group message: {}", message.getText());
-        } else if (message.isTopicMessage()) {
-            log.info("topic message: {}", message.getText());
-        } else if (message.isReply()) {
-            log.info("reply: {}", message.getText());
-        } else if (message.isSuperGroupMessage()) {
-            log.info("super group message: {}", message.getText());
-        } else {
-            log.info("unknown: {}", message.getText());
-        }
-    }
-
-    protected void handleEditedMessage(final Update update) {
-        log.info("It's EditedMessage");
-        this.handleMessage(update);
-    }
-
-    protected void doUserMessage(final Message message) {
-        log.info("user message: {}", message.getText());
-    }
-
-    // 处理命令
-    @Cmd
-    public CmdDTO doCommand(final Update update) {
+    // 处理命令 - CommandHandler.class
+    public CmdDTO commandHandler(final Update update) {
         var cmd = Command.of(update);
         return CmdDTO.of(cmd.getExe(), cmd);
     }
