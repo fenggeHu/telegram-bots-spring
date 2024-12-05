@@ -3,6 +3,7 @@ package tlg.bot.handler;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import tlg.bot.entity.Context;
 
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -24,7 +25,7 @@ public class InteractiveConsumeHandler implements ConsumeHandler {
     }
 
     @Override
-    public boolean execute(Update update, Object owner) {
+    public boolean execute(Context ctx) {
         return false;
     }
 

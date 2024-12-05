@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.telegram.telegrambots.longpolling.util.LongPollingSingleThreadUpdateConsumer;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import tlg.bot.entity.Config;
+import tlg.bot.entity.Context;
 import tlg.bot.handler.ConsumeHandler;
 
 import java.util.LinkedList;
@@ -53,7 +54,8 @@ public abstract class BotConsumer implements LongPollingSingleThreadUpdateConsum
         for (ConsumeHandler ch : consumeHandlers) {
             if (ch.matched(update)) {
                 log.debug("UpdateId={} matched and execute: {}", update.getUpdateId(), ch.getClass().getName());
-                if (!ch.execute(update, this)) {
+                Context ctx = Context.of(update, this);
+                if (!ch.execute(ctx)) {
                     break;
                 }
             }
