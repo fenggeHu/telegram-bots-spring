@@ -18,6 +18,7 @@ public class CmdBot extends BotWriter {
     }
 
     // 处理命令 - CommandHandler.class
+    @Cmd
     public CmdDTO commandHandler(final Update update) {
         var cmd = Command.of(update);
         return CmdDTO.of(cmd.getExe(), cmd);
