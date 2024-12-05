@@ -31,9 +31,8 @@ public class InteractiveConsumeHandler implements ConsumeHandler {
         return map.computeIfAbsent(methodName, e -> getMethod(owner, methodName, parameterTypes));
     }
 
-    // Declared Method：含父类所有的public方法
     @SneakyThrows
     private Method getMethod(Object owner, String methodName, Class<?>... parameterTypes) {
-        return owner.getClass().getDeclaredMethod(methodName, parameterTypes);
+        return owner.getClass().getMethod(methodName, parameterTypes);
     }
 }
