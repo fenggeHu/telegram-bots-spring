@@ -16,7 +16,7 @@ public class Config {
     private String token;
     // Bot实现类
     private String botClassName;
-    // ConsumeHandler - 配置类名
+    // ConsumeHandler - 配置消费处理类名
     private String[] consumes;
 
     // setter
