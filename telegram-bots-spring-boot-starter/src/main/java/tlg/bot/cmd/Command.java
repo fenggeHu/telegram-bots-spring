@@ -1,4 +1,4 @@
-package tlg.bot.entity;
+package tlg.bot.cmd;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

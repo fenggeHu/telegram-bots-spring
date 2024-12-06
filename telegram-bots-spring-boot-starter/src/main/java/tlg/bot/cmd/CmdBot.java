@@ -1,9 +1,10 @@
-package tlg.bot;
+package tlg.bot.cmd;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import tlg.bot.entity.Command;
+import tlg.bot.BotWriter;
+import tlg.bot.cmd.Command;
 import tlg.bot.entity.Config;
 import tool.internal.cmd.Cmd;
 import tool.internal.cmd.CmdDTO;

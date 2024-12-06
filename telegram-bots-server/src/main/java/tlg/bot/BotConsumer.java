@@ -63,7 +63,4 @@ public abstract class BotConsumer implements LongPollingSingleThreadUpdateConsum
         log.debug("UpdateId={} consume finished.", update.getUpdateId());
     }
 
-    public void userMessageHandler(Update update) {
-        // default for UserMessageHandler
-    }
 }
