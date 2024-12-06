@@ -23,7 +23,7 @@ public class CmdMethod<T> {
     protected Class<T> clazz;
     // cmd class
     protected Class<?> cmdClass;
-    // object
+    // method所属的object
     protected T cmdObject;
     // 方法
     protected Method method;

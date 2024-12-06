@@ -27,20 +27,18 @@ public class CmdClass<T> {
     // 唯一ID - bean id/name
     @Getter
     private String id;
-    // boot 对象实例id
+    // boot 对象的实例
+    @Setter
+    @Getter
+    private T boot;
     // boot class 原类
     @Getter
     private Class<T> clazz;
-    // boot base class cmd拦截类或者等于clazz
+    // boot class cmd代理类(bytebuddy生成)或者原类clazz
     @Getter
     private Class<?> cmdClass;
     @Getter
     private ExtClass[] extClass;
-    // ===对象的实例===
-    // base class实例化的对象
-    @Setter
-    @Getter
-    private T base;
 
     // 所有含注解的method信息 - cmd id/value -> Method
     @Getter

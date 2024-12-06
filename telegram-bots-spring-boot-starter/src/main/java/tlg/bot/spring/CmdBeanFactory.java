@@ -28,7 +28,7 @@ public class CmdBeanFactory implements ApplicationContextAware {
         CmdMethodKeeper.set(cmdClass.getId(), cmdClass);  // 统一管理
         // 注册boot bean
         var boot = registerBean(cmdClass.getId(), cmdClass.getCmdClass(), constructorArgs);
-        cmdClass.setBase(boot);
+        cmdClass.setBoot(boot);
         // 更新keeper
         fillKeeper(cmdClass.getId(), cmdClass.getMethods().values(), cmdClass.getClazz(), boot);
 
