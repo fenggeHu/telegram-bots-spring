@@ -40,7 +40,9 @@ public @interface Ext {
         public static ExtClass of(Class<?> clazz) {
             // 类注解
             Ext ext = clazz.getAnnotation(Ext.class);
-            if (null == ext) return null;
+            if (null == ext) {
+                return null;
+            }
             var id = ext.value().length() > 0 ? ext.value().trim() : clazz.getSimpleName();
 
             // 属性注解 -- 包含了父类的属性注解
@@ -52,12 +54,14 @@ public @interface Ext {
         // 如果clazz没有Ext注解信息，就补充baseClass
         public static ExtClass of(Class<?> baseClass, Class<?> extClass) {
             ExtClass extInfo = of(extClass);
+            // 在boot class的配置中指定的Ext class可以没有Ext注解
             if (null == extInfo) {
-                extInfo = ExtClass.builder().id(extClass.getName()).build();
+                // 属性注解 -- 包含了父类的属性注解
+                var fields = ClassUtil.getDeclaredFieldsWithAnnotation(extClass, Ext.class);
+                extInfo = ExtClass.builder().id(extClass.getName()).clazz(extClass)
+                        .baseClass(new Class[]{baseClass}).extFields(fields).build();
             }
-            if (extInfo.getBaseClass() == null) {
-                extInfo.setBaseClass(new Class[]{baseClass});
-            }
+
             return extInfo;
         }
 
@@ -80,6 +84,7 @@ public @interface Ext {
             return extClasses;
         }
 
+        // 扫描包：只加载含有@Ext注解的class
         public static Map<String, ExtClass> of(String... pkgs) {
             Map<String, ExtClass> extClasses = new HashMap<>();
             var extClassSet = ReflectionUtil.getClassWithAnnotation(Ext.class, pkgs);

@@ -33,4 +33,3 @@ https://core.telegram.org/bots/api
    BotFather命令：/setprivacy ，选择自己的机器人, 然后选择 Disable
 
 # cmd问题
-1，配置了ext class，当class没有注解Ext时，因为没有配置main class报null
