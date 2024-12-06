@@ -7,7 +7,9 @@ import tool.internal.bb.Interceptor;
 import tool.utils.ExpressionParser;
 
 import java.lang.reflect.Method;
+import java.util.Map;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 拦截注解 @Cmd
@@ -16,6 +18,8 @@ import java.util.concurrent.Callable;
  **/
 @Slf4j
 public class CmdInterceptor extends Interceptor {
+    private Map<Method, CmdDTO> cachedCmdInfo = new ConcurrentHashMap<>();
+
     @SneakyThrows
     @RuntimeType
 //    @Advice.OnMethodEnter
@@ -29,21 +33,27 @@ public class CmdInterceptor extends Interceptor {
         // 优先级1，如果method returnType是CmdDTO class或继承自ToCmd class
         if (method.getReturnType().isAssignableFrom(CmdDTO.class)) {
             cmdDTO = (CmdDTO) callable.call();
+            if (cmdDTO == null) {
+                log.info("{}.{} return null", method.getDeclaringClass().getName(), method.getName());
+                return null;
+            }
         } else {
-            var cmdInfo = Cmd.Builder.of(method);
+            cmdDTO = CmdDTO.builder().args(args).build();
+            var cmdInfo = cachedCmdInfo.computeIfAbsent(method, m -> Cmd.Builder.of(m));
+            String to;
             // 解析注解
-            String to = ExpressionParser.str(cmdInfo.getTo(), buildParameters(method, args));   // TODO 待优化
+            if (cmdInfo.getTo().contains("$")) { // 解析表达式
+                to = ExpressionParser.str(cmdInfo.getTo(), buildParameters(method, args));   // TODO 待优化
+            } else {
+                to = cmdInfo.getTo();
+            }
             // 判断跳转 - to为空或者与本id相同时执行本方法
-            if (to.isEmpty() || to.equals(cmdInfo.getId())) {
+            if (null == to || to.isEmpty() || to.equals(cmdInfo.getId())) {
                 return callable.call();
             }
-            cmdDTO = CmdDTO.builder().to(to).args(args).build();
+            cmdDTO.setTo(to);
         }
 
-        if (cmdDTO == null) {
-            log.info("{}.{} return null", method.getDeclaringClass().getName(), method.getName());
-            return null;
-        }
         // 执行跳转
         String to = cmdDTO.to();
         if (!to.isEmpty()) {
