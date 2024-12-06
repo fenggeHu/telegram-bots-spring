@@ -12,6 +12,7 @@ import java.lang.reflect.Method;
  * @author max.hu  @date 2024/12/04
  **/
 public class CommandHandler extends InteractiveConsumeHandler {
+    public final static String handlerMethodName = "commandHandler";
 
     @Override
     public boolean matched(Update update) {
@@ -21,7 +22,7 @@ public class CommandHandler extends InteractiveConsumeHandler {
     @Override
     @SneakyThrows
     public boolean execute(Context ctx) {
-        Method method = getHandleMethod(ctx.getOwner(), "commandHandler", Update.class);
+        Method method = getHandlerMethod(ctx.getOwner(), handlerMethodName, Update.class);
         method.invoke(ctx.getOwner(), ctx.getUpdate());
 
         return false;

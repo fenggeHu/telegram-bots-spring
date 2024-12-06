@@ -29,7 +29,7 @@ public class InteractiveConsumeHandler implements ConsumeHandler {
         return false;
     }
 
-    protected Method getHandleMethod(Object owner, String methodName, Class<?>... parameterTypes) {
+    protected Method getHandlerMethod(Object owner, String methodName, Class<?>... parameterTypes) {
         Map<String, Method> map = methods.computeIfAbsent(owner, e -> new ConcurrentHashMap<>());
         return map.computeIfAbsent(methodName, e -> getMethod(owner, methodName, parameterTypes));
     }

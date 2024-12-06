@@ -12,6 +12,8 @@ import java.lang.reflect.Method;
  * @author max.hu  @date 2024/12/04
  **/
 public class UserMessageHandler extends InteractiveConsumeHandler {
+    public final static String handlerMethodName = "userMessageHandler";
+
     @Override
     public boolean matched(Update update) {
         return (update.hasMessage() || update.hasEditedMessage()) && update.getMessage().isUserMessage();
@@ -20,7 +22,7 @@ public class UserMessageHandler extends InteractiveConsumeHandler {
     @Override
     @SneakyThrows
     public boolean execute(Context ctx) {
-        Method method = getHandleMethod(ctx.getOwner(), "userMessageHandler", Update.class);
+        Method method = getHandlerMethod(ctx.getOwner(), handlerMethodName, Update.class);
         method.invoke(ctx.getOwner(), ctx.getUpdate());
 
         return false;

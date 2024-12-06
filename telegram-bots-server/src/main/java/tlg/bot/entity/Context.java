@@ -11,8 +11,11 @@ import java.util.Map;
  **/
 @Getter
 public class Context {
+    // 信息
     private final Update update;
+    // 所属的bot实例
     private final Object owner;
+    // 放一些上下文的临时数据 - 方便多个处理器联合工作
     private final Map<String, Object> data = new HashMap<>();
 
     public Context(Update update, Object owner) {
