@@ -32,7 +32,7 @@ public class CmdInterceptor extends Interceptor {
         } else {
             var cmdInfo = Cmd.Builder.of(method);
             // 解析注解
-            String to = ExpressionParser.str(cmdInfo.getTo(), buildParameters(method, args));
+            String to = ExpressionParser.str(cmdInfo.getTo(), buildParameters(method, args));   // TODO 待优化
             // 判断跳转 - to为空或者与本id相同时执行本方法
             if (to.isEmpty() || to.equals(cmdInfo.getId())) {
                 return callable.call();

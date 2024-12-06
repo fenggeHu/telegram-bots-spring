@@ -84,9 +84,8 @@ public class CmdMethod<T> {
             return ret;
         }
         for (Method m : methods) {
-            CmdInfo ci = Cmd.Builder.of(m);
             CmdMethod cmi = CmdMethod.<T>builder()
-                    .value(ci.getId())
+                    .value(Cmd.Builder.id(m))
                     .clazz(clazz)
                     .method(m)
                     .build();

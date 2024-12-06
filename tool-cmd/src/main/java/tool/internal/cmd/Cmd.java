@@ -35,7 +35,19 @@ public @interface Cmd {
      * 注解转Cmd information
      */
     class Builder {
-        public static CmdInfo of(Method method) {
+        // 计算id
+        public static String id(Method method) {
+            Cmd clazz = method.getDeclaringClass().getAnnotation(Cmd.class);
+            Cmd cmd = method.getAnnotation(Cmd.class);
+            String root = null == clazz ? "" : clazz.value()
+                    .replace("//", "/").replace("//", "/").trim();
+            var ns = cmd.value().replace("//", "/").replace("//", "/").trim();
+            String path = !ns.isEmpty() ? ns : method.getName();
+            var id = ("/" + root + (path.startsWith("/") ? path : "/" + path)).replace("//", "/");
+            return id;
+        }
+
+        public static CmdDTO of(Method method) {
             // 查询class是否配置了路径
             Cmd clazz = method.getDeclaringClass().getAnnotation(Cmd.class);
             Cmd cmd = method.getAnnotation(Cmd.class);
@@ -44,7 +56,7 @@ public @interface Cmd {
             var ns = cmd.value().replace("//", "/").replace("//", "/").trim();
             String path = !ns.isEmpty() ? ns : method.getName();
             var id = ("/" + root + (path.startsWith("/") ? path : "/" + path)).replace("//", "/");
-            return CmdInfo.builder().id(id).to(cmd.to().trim()).notes(cmd.notes()).clazz(method.getDeclaringClass()).build();
+            return CmdDTO.builder().id(id).to(cmd.to().trim()).build();
         }
 
     }
