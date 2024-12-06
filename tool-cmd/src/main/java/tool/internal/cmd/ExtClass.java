@@ -33,6 +33,11 @@ public class ExtClass {
     // ext fields - 为了注入base类的属性
     protected List<Field> extFields;
 
+    // 后置的处理
+    public void postConstruct() {
+        // TODO
+    }
+
     // 补充扩展属性的值
     public void fillExtFieldValue(Object base, Object ext) {
         this.ext = ext;
