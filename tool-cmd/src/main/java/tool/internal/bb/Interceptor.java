@@ -15,9 +15,13 @@ public class Interceptor {
     @Setter
     protected InterceptConfig config;
 
-    protected Map<String, Object> buildParameters(Method m, Object[] args) {
+    // 为表达式解析器构建参数
+    protected Object buildParserParameters(Method m, Object[] args) {
         Map<String, Object> ret = new HashMap<>();
         if (null == m || null == args || args.length == 0) return ret;
+        if (args.length == 1) {
+            return args[0];
+        }
         var params = m.getParameters();
         if (params.length != args.length) {
             throw new RuntimeException("Something got Wrong: " + m.getName());

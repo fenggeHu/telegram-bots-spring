@@ -43,7 +43,7 @@ public class CmdInterceptor extends Interceptor {
             String to;
             // 解析注解
             if (cmdInfo.getTo().contains("$")) { // 解析表达式
-                to = ExpressionParser.str(cmdInfo.getTo(), buildParameters(method, args));   // TODO 待优化
+                to = ExpressionParser.str(cmdInfo.getTo(), buildParserParameters(method, args));
             } else {
                 to = cmdInfo.getTo();
             }
