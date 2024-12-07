@@ -1,5 +1,6 @@
 package utils;
 
+import dto.User;
 import org.junit.jupiter.api.Test;
 import tool.utils.ExpressionParser;
 import tool.utils.PrimitiveValueUtil;
@@ -69,6 +70,15 @@ public class ExpressionParserTests {
 
         var s = ExpressionParser.str("排序: ${Collections.sort(x1);x1}\n输出数组: ${Arrays.toString(x0)}", arr, list, map);
         System.out.println(s);
+
+        var s2 = ExpressionParser.str("${String.join(\",\",x0)}", list);
+        System.out.println();
+    }
+
+    public void testArgs0() {
+        User u = User.builder().name("刘备").code("u1").build();
+        var es = ExpressionParser.str("${name}-${code}", u);
+        System.out.println(es);
     }
 
     @Test

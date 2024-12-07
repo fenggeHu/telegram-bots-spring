@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * MVEL：简单易用、性能较好，比较适合规则简单的模板解析场景
  * 关于MVEL传参的用法：
  * TemplateRuntime.execute 和 MVEL.eval的上下文参数都可以传入2个：Object ctx和Map<String, Object> vars
  * ctx:  传入对象，在表达式里使用对象的属性。如ctx = new User(id=10)，则表达式“id==10”返回True
@@ -101,7 +102,7 @@ public class ExpressionParser {
                     return MVEL.eval(expression, args[0]);
                 } else {
                     Map<String, Object> vars = xVars(args); // 用x0...n当作Map变量key
-                    return MVEL.eval(expression, args[0], vars);
+                    return MVEL.eval(expression, args[0], vars);    // 只有一个参数时，可以使用对象的属性key或者x0.key
                 }
             } else {
                 Map<String, Object> vars = xVars(args); // 用x0...n当作Map变量key

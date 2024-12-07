@@ -17,7 +17,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <skipTests>true</skipTests>
         <bytebuddy.version>1.15.8</bytebuddy.version>
-        <mvel2.version>2.4.15.Final</mvel2.version>
+        <mvel2.version>2.5.2.Final</mvel2.version>
     </properties>
 
 
