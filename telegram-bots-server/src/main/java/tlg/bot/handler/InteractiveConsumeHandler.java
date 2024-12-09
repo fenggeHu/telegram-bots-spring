@@ -45,9 +45,10 @@ public class InteractiveConsumeHandler implements ConsumeHandler {
         Method method = null;
         try {
             method = clazz.getDeclaredMethod(name, parameterTypes);
+            log.info("Get Method: {}.{}", clazz.getName(), name);
             return method;  // clazz.getDeclaredMethod 返回值不为空
         } catch (Exception e) {
-            log.warn("No Method: {}.{}", clazz.getName(), name);
+            log.info("No Method: {}.{}", clazz.getName(), name);
         }
         Class sc = clazz.getSuperclass();
         if (null != sc) {
