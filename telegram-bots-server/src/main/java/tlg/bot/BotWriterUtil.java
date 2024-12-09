@@ -75,8 +75,12 @@ public class BotWriterUtil {
     //<blockquote>Block quotation started\nBlock quotation continued\nThe last line of the block quotation</blockquote>
     //<blockquote expandable>Expandable block quotation started\nExpandable block quotation continued\nExpandable block quotation continued\nHidden by default part of the block quotation started\nExpandable block quotation continued\nThe last line of the block quotation</blockquote>
     public static void html(final TelegramClient telegramClient, Long chatId, String html) {
-        if (StringUtils.isBlank(html.trim())) return;    // api - 不能发送空消息
-        var sm = SendMessage.builder().chatId(chatId).text(html).parseMode(ParseMode.HTML).build();
+        SendMessage sm;
+        if (StringUtils.isBlank(html.trim())) {
+            sm = SendMessage.builder().chatId(chatId).text("---").build();    // api - 不能发送空消息
+        }else {
+            sm = SendMessage.builder().chatId(chatId).text(html).parseMode(ParseMode.HTML).build();
+        }
         sendMessage(telegramClient, sm);
     }
 
