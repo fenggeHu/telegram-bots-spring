@@ -12,10 +12,10 @@ import java.util.regex.Pattern;
  * @author max.hu  @date 2024/12/17
  **/
 public class CommandLine {
-    private static final char CMD_SPLIT = '|';
-    private static final char Double_Quote = '"';
-    private static final char Single_Quote = '\'';
-    private static final String SPACE = " ";
+    public static final char CMD_SPLIT = '|';
+    public static final char DOUBLE_QUOTE = '"';
+    public static final char SINGLE_QUOTE = '\'';
+    public static final String SPACE = " ";
     @Getter
     String command; // 命令
     @Getter
@@ -41,9 +41,9 @@ public class CommandLine {
         for (int i = 0; i < commandLine.length(); i++) {
             char c = commandLine.charAt(i);
             // 检查是否遇到双引号或单引号
-            if (c == Double_Quote && !insideSingleQuote) {
+            if (c == DOUBLE_QUOTE && !insideSingleQuote) {
                 insideDoubleQuote = !insideDoubleQuote;  // 切换双引号状态
-            } else if (c == Single_Quote && !insideDoubleQuote) {
+            } else if (c == SINGLE_QUOTE && !insideDoubleQuote) {
                 insideSingleQuote = !insideSingleQuote;  // 切换单引号状态
             }
 
@@ -81,6 +81,9 @@ public class CommandLine {
             // 处理选项（以 "-" 开头的部分）
             if (token.startsWith("-")) {
                 // 如果是复合选项（如 -rn），保持其原样作为一个选项
+                if (currentOption != null) {
+                    options.put(currentOption, null);
+                }
                 currentOption = token;
             } else {
                 // 如果当前选项有值，则与该选项关联
@@ -106,10 +109,10 @@ public class CommandLine {
         while (matcher.find()) {
             if (matcher.group(1) != null) {
                 // 处理单引号内的内容
-                tokens.add(Single_Quote + matcher.group(1) + Single_Quote);
+                tokens.add(SINGLE_QUOTE + matcher.group(1) + SINGLE_QUOTE);
             } else if (matcher.group(2) != null) {
                 // 处理双引号内的内容
-                tokens.add(Double_Quote + matcher.group(2) + Double_Quote);
+                tokens.add(DOUBLE_QUOTE + matcher.group(2) + DOUBLE_QUOTE);
             } else {
                 // 处理没有引号的内容
                 tokens.add(matcher.group(3));
@@ -120,18 +123,17 @@ public class CommandLine {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(command).append(SPACE);
+        StringBuilder sb = new StringBuilder(command);
         if (null != options) {
             options.forEach((k, v) -> {
-                sb.append(k);
+                sb.append(SPACE).append(k);
                 if (null != v) {
                     sb.append(SPACE).append(v);
                 }
-                sb.append(SPACE);
             });
         }
         if (null != arguments) {
-            arguments.forEach(v -> sb.append(v).append(SPACE));
+            arguments.forEach(v -> sb.append(SPACE).append(v));
         }
         return sb.toString();
     }
