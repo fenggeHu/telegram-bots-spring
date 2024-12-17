@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 
 /**
  * 把命令行解析成命令-参数形式
+ *
  * @author max.hu  @date 2024/12/17
  **/
 public class CommandLine {
@@ -37,12 +38,11 @@ public class CommandLine {
     // 使用正则表达式拆分命令行，保留引号内的内容作为一个整体
     private static Pattern pattern = Pattern.compile("'([^']*)'|\"([^\"]*)\"|([^\\s]+)");
 
-    // 解析参数
-    //
-    public static CommandLine parse(String commandLine) {
+    // 解析一个命令
+    // eg: grep -rn -F "Corba" main.log
+    public static CommandLine parse(String cmdString) {
         List<String> tokens = new ArrayList<>();
-        Matcher matcher = pattern.matcher(commandLine);
-
+        Matcher matcher = pattern.matcher(cmdString);
         while (matcher.find()) {
             if (matcher.group(1) != null) {
                 // 处理单引号内的内容
@@ -61,10 +61,7 @@ public class CommandLine {
         List<String> arguments = new ArrayList<>();
 
         String currentOption = null;  // 当前处理的选项
-
-        for (int i = 1; i < tokens.size(); i++) {
-            String token = tokens.get(i);
-
+        for (String token : tokens) {
             // 处理选项（以 "-" 开头的部分）
             if (token.startsWith("-")) {
                 // 如果是复合选项（如 -rn），保持其原样作为一个选项
