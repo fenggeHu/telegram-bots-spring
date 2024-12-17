@@ -61,26 +61,10 @@ public class CommandLine {
         return result;
     }
 
-    // 使用正则表达式拆分命令行，保留引号内的内容作为一个整体
-    private static Pattern pattern = Pattern.compile("'([^']*)'|\"([^\"]*)\"|([^\\s]+)");
-
     // 解析一个命令
     // eg: grep -rn -F "Corba" main.log
     public static CommandLine parse(String cmdString) {
-        List<String> tokens = new ArrayList<>();
-        Matcher matcher = pattern.matcher(cmdString);
-        while (matcher.find()) {
-            if (matcher.group(1) != null) {
-                // 处理单引号内的内容
-                tokens.add(Single_Quote + matcher.group(1) + Single_Quote);
-            } else if (matcher.group(2) != null) {
-                // 处理双引号内的内容
-                tokens.add(Double_Quote + matcher.group(2) + Double_Quote);
-            } else {
-                // 处理没有引号的内容
-                tokens.add(matcher.group(3));
-            }
-        }
+        List<String> tokens = getTokens(cmdString);
 
         String command = tokens.get(0);  // 第一个部分是命令本身
         Map<String, List<String>> options = new LinkedHashMap<>();
@@ -107,6 +91,26 @@ public class CommandLine {
         }
 
         return new CommandLine(command, options, arguments);
+    }
+
+    // 使用正则表达式拆分命令行，保留引号内的内容作为一个整体
+    private static Pattern pattern = Pattern.compile("'([^']*)'|\"([^\"]*)\"|([^\\s]+)");
+    private static List<String> getTokens(String cmdString) {
+        List<String> tokens = new ArrayList<>();
+        Matcher matcher = pattern.matcher(cmdString);
+        while (matcher.find()) {
+            if (matcher.group(1) != null) {
+                // 处理单引号内的内容
+                tokens.add(Single_Quote + matcher.group(1) + Single_Quote);
+            } else if (matcher.group(2) != null) {
+                // 处理双引号内的内容
+                tokens.add(Double_Quote + matcher.group(2) + Double_Quote);
+            } else {
+                // 处理没有引号的内容
+                tokens.add(matcher.group(3));
+            }
+        }
+        return tokens;
     }
 
     @Override
