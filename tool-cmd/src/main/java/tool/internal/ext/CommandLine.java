@@ -1,5 +1,7 @@
 package tool.internal.ext;
 
+import lombok.Getter;
+
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -14,11 +16,14 @@ public class CommandLine {
     private static final char Double_Quote = '"';
     private static final char Single_Quote = '\'';
     private static final String SPACE = " ";
+    @Getter
     String command; // 命令
-    Map<String, List<String>> options;  // 选项
+    @Getter
+    Map<String, String> options;  // 选项 -F "xxx"
+    @Getter
     List<String> arguments; // 参数
 
-    public CommandLine(String command, Map<String, List<String>> options, List<String> arguments) {
+    public CommandLine(String command, Map<String, String> options, List<String> arguments) {
         this.command = command;
         this.options = options;
         this.arguments = arguments;
@@ -67,7 +72,7 @@ public class CommandLine {
         List<String> tokens = getTokens(cmdString);
 
         String command = tokens.get(0);  // 第一个部分是命令本身
-        Map<String, List<String>> options = new LinkedHashMap<>();
+        Map<String, String> options = new LinkedHashMap<>();
         List<String> arguments = new ArrayList<>();
 
         String currentOption = null;  // 当前处理的选项
@@ -77,11 +82,10 @@ public class CommandLine {
             if (token.startsWith("-")) {
                 // 如果是复合选项（如 -rn），保持其原样作为一个选项
                 currentOption = token;
-                options.putIfAbsent(currentOption, new ArrayList<>());
             } else {
                 // 如果当前选项有值，则与该选项关联
                 if (currentOption != null) {
-                    options.get(currentOption).add(token);
+                    options.put(currentOption, token);
                     currentOption = null;  // 处理完当前选项，清空当前选项
                 } else {
                     // 无选项的参数（如文件名）
@@ -95,6 +99,7 @@ public class CommandLine {
 
     // 使用正则表达式拆分命令行，保留引号内的内容作为一个整体
     private static Pattern pattern = Pattern.compile("'([^']*)'|\"([^\"]*)\"|([^\\s]+)");
+
     private static List<String> getTokens(String cmdString) {
         List<String> tokens = new ArrayList<>();
         Matcher matcher = pattern.matcher(cmdString);
@@ -119,8 +124,8 @@ public class CommandLine {
         if (null != options) {
             options.forEach((k, v) -> {
                 sb.append(k);
-                if (null != v && !v.isEmpty()) {
-                    v.forEach(ve -> sb.append(SPACE).append(ve));
+                if (null != v) {
+                    sb.append(SPACE).append(v);
                 }
                 sb.append(SPACE);
             });
