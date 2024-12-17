@@ -21,8 +21,8 @@ public class CommandLine {
         this.arguments = arguments;
     }
 
-    // 解析命令行
-    // eg: grep -rn -F "CorbaNotifyTask" ptnlog.log |grep "msgObjName--"|awk '{print $8}'|sort|uniq
+    // 解析命令行 - 命令行有顺序
+    // eg: grep -rn -F "Corba" main.log |grep "ObjName==M"|awk '{print $8}'|sort|uniq
     public static List<CommandLine> parseAll(String line) {
         String[] cmds = line.split(CMD_SPLIT);
         List<CommandLine> ret = new LinkedList<>();
@@ -37,7 +37,8 @@ public class CommandLine {
     // 使用正则表达式拆分命令行，保留引号内的内容作为一个整体
     private static Pattern pattern = Pattern.compile("'([^']*)'|\"([^\"]*)\"|([^\\s]+)");
 
-    // 解析参数 - 仅支持了
+    // 解析参数
+    //
     public static CommandLine parse(String commandLine) {
         List<String> tokens = new ArrayList<>();
         Matcher matcher = pattern.matcher(commandLine);

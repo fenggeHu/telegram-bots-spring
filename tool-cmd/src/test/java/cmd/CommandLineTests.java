@@ -10,7 +10,7 @@ public class CommandLineTests {
 
     @Test
     public void testCmdParser() {
-        var cmds = CommandLine.parseAll("grep -rn -F 'CorbaNotifyTask' ptnlog.log |grep \"msgObjName--\"|awk '{print $8}'|sort|uniq");
+        var cmds = CommandLine.parseAll("grep -rn -F 'CorbaNotify' main.log |grep \"ObjName=\"|awk '{print $8}'|sort|uniq");
         for (var cmd : cmds) {
             System.out.println(cmd);
         }
