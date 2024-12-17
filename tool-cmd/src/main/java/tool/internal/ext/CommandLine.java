@@ -10,7 +10,9 @@ import java.util.regex.Pattern;
  * @author max.hu  @date 2024/12/17
  **/
 public class CommandLine {
-    private static final String CMD_SPLIT = "\\|";
+    private static final char CMD_SPLIT = '|';
+    private static final char Double_Quote = '"';
+    private static final char Single_Quote = '\'';
     private static final String SPACE = " ";
     String command; // 命令
     Map<String, List<String>> options;  // 选项
@@ -24,15 +26,39 @@ public class CommandLine {
 
     // 解析命令行 - 命令行有顺序
     // eg: grep -rn -F "Corba" main.log |grep "ObjName==M"|awk '{print $8}'|sort|uniq
-    public static List<CommandLine> parseAll(String line) {
-        String[] cmds = line.split(CMD_SPLIT);
-        List<CommandLine> ret = new LinkedList<>();
-        for (String cmd : cmds) {
-            String s = cmd.trim();
-            CommandLine clr = parse(s);
-            ret.add(clr);
+    public static List<CommandLine> parseAll(String commandLine) {
+        List<CommandLine> result = new LinkedList<>();
+        List<String> commands = new ArrayList<>();
+        StringBuilder current = new StringBuilder();
+        boolean insideDoubleQuote = false;
+        boolean insideSingleQuote = false;
+
+        for (int i = 0; i < commandLine.length(); i++) {
+            char c = commandLine.charAt(i);
+            // 检查是否遇到双引号或单引号
+            if (c == Double_Quote && !insideSingleQuote) {
+                insideDoubleQuote = !insideDoubleQuote;  // 切换双引号状态
+            } else if (c == Single_Quote && !insideDoubleQuote) {
+                insideSingleQuote = !insideSingleQuote;  // 切换单引号状态
+            }
+
+            // 如果当前字符是分隔符，并且不在引号内，进行分割
+            if (c == CMD_SPLIT && !insideDoubleQuote && !insideSingleQuote) {
+                commands.add(current.toString());
+                current.setLength(0);  // 清空 StringBuilder
+            } else {
+                current.append(c);  // 否则，继续累加字符
+            }
         }
-        return ret;
+
+        // 添加最后一个部分
+        commands.add(current.toString());
+
+        // 解析每个命令
+        for (String cmd : commands) {
+            result.add(parse(cmd));
+        }
+        return result;
     }
 
     // 使用正则表达式拆分命令行，保留引号内的内容作为一个整体
@@ -46,10 +72,10 @@ public class CommandLine {
         while (matcher.find()) {
             if (matcher.group(1) != null) {
                 // 处理单引号内的内容
-                tokens.add(matcher.group(1));
+                tokens.add(Single_Quote + matcher.group(1) + Single_Quote);
             } else if (matcher.group(2) != null) {
                 // 处理双引号内的内容
-                tokens.add(matcher.group(2));
+                tokens.add(Double_Quote + matcher.group(2) + Double_Quote);
             } else {
                 // 处理没有引号的内容
                 tokens.add(matcher.group(3));
@@ -61,7 +87,8 @@ public class CommandLine {
         List<String> arguments = new ArrayList<>();
 
         String currentOption = null;  // 当前处理的选项
-        for (String token : tokens) {
+        for (int i = 1; i < tokens.size(); i++) {
+            String token = tokens.get(i);
             // 处理选项（以 "-" 开头的部分）
             if (token.startsWith("-")) {
                 // 如果是复合选项（如 -rn），保持其原样作为一个选项
