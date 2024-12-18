@@ -19,7 +19,7 @@ public class CommandLine {
     @Getter
     String command; // 命令
     @Getter
-    Map<String, String> options;  // 选项 -F "xxx"
+    Map<String, String> options;  // 选项：-rn -F "xxx"
     @Getter
     List<String> arguments; // 参数
 
@@ -31,7 +31,7 @@ public class CommandLine {
 
     // 解析命令行 - 命令行有顺序
     // eg: grep -rn -F "Corba" main.log |grep "ObjName==M"|awk '{print $8}'|sort|uniq
-    public static List<CommandLine> parseAll(String commandLine) {
+    public static List<CommandLine> parse(String commandLine) {
         List<CommandLine> result = new LinkedList<>();
         List<String> commands = new ArrayList<>();
         StringBuilder current = new StringBuilder();
@@ -61,22 +61,39 @@ public class CommandLine {
 
         // 解析每个命令
         for (String cmd : commands) {
-            result.add(parse(cmd));
+            result.add(of(cmd));
         }
         return result;
     }
 
     // 解析一个命令
     // eg: grep -rn -F "Corba" main.log
-    public static CommandLine parse(String cmdString) {
+    public static CommandLine of(String cmdString) {
         List<String> tokens = getTokens(cmdString);
 
         String command = tokens.get(0);  // 第一个部分是命令本身
+        if (tokens.size() > 1) {
+            CommandLine cl = parseArgs(tokens.subList(1, tokens.size()));
+            cl.command = command;
+            return cl;
+        } else {
+            return new CommandLine(command, Collections.emptyMap(), Collections.emptyList());
+        }
+    }
+
+    // 解析参数. -rn -F "Corba" main.log
+    public static CommandLine parseArgs(String args) {
+        List<String> tokens = getTokens(args);
+        return parseArgs(tokens);
+    }
+
+    // 解析参数
+    private static CommandLine parseArgs(List<String> tokens) {
         Map<String, String> options = new LinkedHashMap<>();
         List<String> arguments = new ArrayList<>();
 
         String currentOption = null;  // 当前处理的选项
-        for (int i = 1; i < tokens.size(); i++) {
+        for (int i = 0; i < tokens.size(); i++) {
             String token = tokens.get(i);
             // 处理选项（以 "-" 开头的部分）
             if (token.startsWith("-")) {
@@ -96,8 +113,11 @@ public class CommandLine {
                 }
             }
         }
+        if (null != currentOption) {    // 最后一项option
+            options.put(currentOption, null);
+        }
 
-        return new CommandLine(command, options, arguments);
+        return new CommandLine(null, options, arguments);
     }
 
     // 使用正则表达式拆分命令行，保留引号内的内容作为一个整体
@@ -123,7 +143,8 @@ public class CommandLine {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(command);
+        StringBuilder sb = new StringBuilder();
+        if (null != command) sb.append(command);
         if (null != options) {
             options.forEach((k, v) -> {
                 sb.append(SPACE).append(k);
