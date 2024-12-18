@@ -5,15 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import org.apache.commons.lang3.StringUtils;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.chat.Chat;
 import org.telegram.telegrambots.meta.api.objects.message.Message;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * /command text
@@ -41,33 +35,6 @@ public class Command {
 
     public Chat chat() {
         return message().getChat();
-    }
-
-    // 解析parameter - 空格分隔
-    public String[] args() {
-        return this.parameter.split(" ");
-    }
-
-    // 解析parameter。 key：--key， kv空格分隔
-    // 格式： -x 124 -y 4354 -z -a hello
-    private static final Pattern pattern = Pattern.compile("-([a-zA-Z0-9-]+)(?:\\s+([^\s-]+))?");
-
-    public Map<String, String> toArgs() {
-        Map<String, String> params = new HashMap<>();
-        if (StringUtils.isBlank(this.parameter)) {
-            return params;
-        }
-        Matcher matcher = pattern.matcher(this.parameter.trim());
-        while (matcher.find()) {
-            String key = matcher.group(1);
-            if (key.startsWith("-")) {
-                key = key.substring(1);
-            }
-            String value = matcher.group(2);
-            params.put(key, value);
-        }
-
-        return params;
     }
 
     /**
