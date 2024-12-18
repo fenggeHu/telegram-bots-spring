@@ -8,7 +8,9 @@ import java.util.regex.Pattern;
 
 /**
  * 把命令行解析成命令-参数形式
- *
+ * eg:
+ * grep -rn -F 'Corba' main.log |grep "ObjName==M|N"|awk '{print $8}'|sort|uniq
+ * cmd a>1 x>y
  * @author max.hu  @date 2024/12/17
  **/
 public class CommandLine {
@@ -30,7 +32,7 @@ public class CommandLine {
     }
 
     // 解析命令行 - 命令行有顺序
-    // eg: grep -rn -F "Corba" main.log |grep "ObjName==M"|awk '{print $8}'|sort|uniq
+    // eg: grep -rn -F "Corba" main.log |grep "ObjName==M|N"|awk '{print $8}'|sort|uniq
     public static List<CommandLine> parse(String commandLine) {
         List<CommandLine> result = new LinkedList<>();
         List<String> commands = new ArrayList<>();
