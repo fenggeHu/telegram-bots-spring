@@ -75,9 +75,11 @@ public class ExpressionParserTests {
         System.out.println();
     }
 
+    @Test
     public void testArgs0() {
         User u = User.builder().name("刘备").code("u1").build();
-        var es = ExpressionParser.str("${name}-${code}", u);
+//        u.setInfo(Map.of("age", 18));
+        var es = ExpressionParser.str("${name}-${code}: ${null==info?'':'Age='+info.get('age')}", u);
         System.out.println(es);
     }
 
