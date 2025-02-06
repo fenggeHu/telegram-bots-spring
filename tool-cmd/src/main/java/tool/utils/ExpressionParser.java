@@ -53,6 +53,8 @@ public class ExpressionParser {
     }
 
     //根据传入的args长度处理
+    // FIXME 对相同的一个表达式字符串“expression”，传入不同的参数args回报错。
+    //  现象：TemplateRuntime.execute(template, vars)执行时匹配第一次使用的args类型，好像template缓存了参数类型
     public static Object execute(String expression, Object... args) {
         CompiledTemplate template = cached.computeIfAbsent(expression,
                 k -> TemplateCompiler.compileTemplate(expression, parserContext));
