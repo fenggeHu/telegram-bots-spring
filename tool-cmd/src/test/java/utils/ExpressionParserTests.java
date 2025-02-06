@@ -103,7 +103,6 @@ public class ExpressionParserTests {
         var cs = ExpressionParser.str(expression, c, emp);
         System.out.println(cs);
     }
-
     @Test
     public void testConstants() {
         long start = System.currentTimeMillis();

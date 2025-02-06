@@ -52,23 +52,36 @@ public class ExpressionParser {
         return vars;
     }
 
+    private static String keyPrefix(Object... args) {
+        StringBuilder sb = new StringBuilder();
+        for (Object obj : args) {
+            sb.append(obj.getClass().getName()).append("_");
+        }
+
+        return sb.toString();
+    }
+
     //根据传入的args长度处理
-    // FIXME 对相同的一个表达式字符串“expression”，传入不同的参数args回报错。
+    // FIXME 对相同的一个表达式字符串“expression”，传入不同的参数args有些情况下报错。
     //  现象：TemplateRuntime.execute(template, vars)执行时匹配第一次使用的args类型，好像template缓存了参数类型
     public static Object execute(String expression, Object... args) {
-        CompiledTemplate template = cached.computeIfAbsent(expression,
+        // cached key带args，避免传入不同参数出现报错的情况
+        String prefix = keyPrefix(args);
+        CompiledTemplate template = cached.computeIfAbsent(prefix + expression,
                 k -> TemplateCompiler.compileTemplate(expression, parserContext));
         try {
             // 处理参数规则
-            if (args.length == 1) { // 只有一个参数的时候可以同时使用对象的属性和Map的Xn.属性
-                if (args[0] instanceof Map) {   // 单独处理入参为Map的情况
-                    return TemplateRuntime.execute(template, args[0]);
-                } else {
-                    Map<String, Object> vars = xVars(args); // 用x0...n当作Map变量key
-                    return TemplateRuntime.execute(template, args[0], vars);
-                }
+            if (args.length == 1) {
+                return TemplateRuntime.execute(template, args[0]);
+                // 只有一个参数的时候可以同时使用对象的属性和Map的Xn.属性
+//                if (args[0] instanceof Map) {   // 单独处理入参为Map的情况
+//                    return TemplateRuntime.execute(template, args[0]);
+//                } else {
+//                    Map<String, Object> vars = xVars(args); // 用x0...n当作Map变量key
+//                    return TemplateRuntime.execute(template, args[0], vars);
+//                }
             } else {
-                Map<String, Object> vars = xVars(args); // 用x0...n当作Map变量key
+                Map<String, Object> vars = xVars(args); // 多个入参时用x0...n当作Map变量key
                 return TemplateRuntime.execute(template, vars);
             }
         } catch (Exception e) {
