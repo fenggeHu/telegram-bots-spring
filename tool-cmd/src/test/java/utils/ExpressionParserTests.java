@@ -1,5 +1,8 @@
 package utils;
 
+import dto.Admin;
+import dto.Customer;
+import dto.Employee;
 import dto.User;
 import org.junit.jupiter.api.Test;
 import tool.utils.ExpressionParser;
@@ -77,10 +80,28 @@ public class ExpressionParserTests {
 
     @Test
     public void testArgs0() {
+        String expression = "${name}-${code}: ${null==info?'':'Age='+info.get('age')}";
         User u = User.builder().name("刘备").code("u1").build();
 //        u.setInfo(Map.of("age", 18));
-        var es = ExpressionParser.str("${name}-${code}: ${null==info?'':'Age='+info.get('age')}", u);
+        var es = ExpressionParser.str(expression, u);
         System.out.println(es);
+        Customer c = Customer.builder().name("曹操").code("c1").build();
+        var cs = ExpressionParser.str(expression, c);
+        System.out.println(cs);
+    }
+
+    @Test
+    public void testArgs1() {
+        String expression = "${x0.id}| ${x0.name}-${x0.code}: ${null==x0.info?'':'Age='+x0.info.get('age')} => ${x1.id}/${x1.name}";
+        User u = User.builder().id(123L).name("刘备").code("u1").build();
+        u.setInfo(Map.of("age", 18));
+        Admin admin = Admin.builder().id(999L).name("管理员").build();
+        var es = ExpressionParser.str(expression, u, admin);
+        System.out.println(es);
+        Employee emp = Employee.builder().id("emp001").name("管理员").build();
+        Customer c = Customer.builder().id("C1").name("曹操").code("c1").build();
+        var cs = ExpressionParser.str(expression, c, emp);
+        System.out.println(cs);
     }
 
     @Test
